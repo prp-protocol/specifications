@@ -628,7 +628,28 @@ A component belongs to the core only if:
 
 ---
 
-# 11. Future Directions
+# 11. Protocol Conformance Notes
+
+This architecture does not define byte-level wire formats. Implementations that
+claim conformance to the current PRP v1 protocol family should nevertheless
+preserve the following architectural constraints:
+
+* cryptographic suite selection is deterministic and bound to the session
+  transcript;
+* compact numeric suite identifiers are protocol selectors;
+* textual suite names are diagnostic aliases only;
+* textual suite names must not be required carrier metadata;
+* a relationship-selected session must not rely on globally meaningful address
+  or suite strings to become intelligible to intermediaries.
+
+The practical consequence is that a PRP packet, stream, carrier or bootstrap
+binding may inherit framing context from lower layers, but the cryptographic
+profile selected for the session must still be explicitly bound into the
+authenticated transcript.
+
+---
+
+# 12. Future Directions
 
 Future systems may define:
 
@@ -646,7 +667,7 @@ Such systems remain compatible with the architecture while remaining outside the
 
 ---
 
-# 12. Conclusion
+# 13. Conclusion
 
 Communication systems have historically been organized around addresses.
 
@@ -678,4 +699,3 @@ Everything else follows from that principle.
 **End of Document**
 **PRP Architecture v1 — Release Candidate 1**
 **Participant Relationship Protocol**
-
