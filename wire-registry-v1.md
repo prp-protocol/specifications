@@ -91,6 +91,12 @@ plaintext is a NACK whose plaintext is the missing `fragment_index` in network
 byte order. `STATUS` carries a 4-byte encrypted plaintext: 16-bit status code
 followed by 16-bit status detail.
 
+Native fixed `PACKET` also uses the fixed header as AEAD associated data and
+does not carry an inner `PRPP` packet. Its encrypted plaintext starts with
+`uint16 type`, `uint16 flags`, and `uint32 plaintext_offset`, followed by the
+application packet plaintext. The fixed header carries session id, sequence,
+message id, fragment index/count, and total plaintext length.
+
 ## Mux Frame Types
 
 | Value | Symbol | Meaning |
