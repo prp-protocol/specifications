@@ -96,6 +96,10 @@ does not carry an inner `PRPP` packet. Its encrypted plaintext starts with
 `uint16 type`, `uint16 flags`, and `uint32 plaintext_offset`, followed by the
 application packet plaintext. The fixed header carries session id, sequence,
 message id, fragment index/count, and total plaintext length.
+The encrypted packet prefix is intentionally not promoted to clear header
+fields: relays and dataplane backends only need the fixed header for sizing,
+key-slot/session selection, replay, and queueing, while endpoint packet
+semantics remain opaque.
 
 ## Mux Frame Types
 
