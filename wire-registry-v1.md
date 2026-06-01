@@ -64,6 +64,26 @@ Packet type values `0` and `65535` are reserved. The v1 known flag mask is
 | `1` | `PRP_DATAGRAM_HANDSHAKE_TYPE_MESSAGE1` | Initiator-to-responder Noise message. |
 | `2` | `PRP_DATAGRAM_HANDSHAKE_TYPE_MESSAGE2` | Responder-to-initiator Noise message. |
 
+## Fixed Datagram Candidate Envelopes
+
+The fixed datagram profile is a candidate migration profile for carriers and
+dataplanes that prefer a constant 48-byte low-level header. It is not the
+current v1 `PRPH`/`PRPP` wire format. Classical and hybrid suites still use
+the cryptographic suite ids registered above.
+
+| Value | Symbol | Meaning |
+| ---: | --- | --- |
+| `1` | `PRP_DATAGRAM_FIXED_ENVELOPE_HANDSHAKE` | Fixed-envelope Noise handshake payload. |
+| `2` | `PRP_DATAGRAM_FIXED_ENVELOPE_PACKET` | Fixed-envelope encrypted packet payload. |
+| `3` | `PRP_DATAGRAM_FIXED_ENVELOPE_PACKET_FEEDBACK` | Reserved encrypted packet feedback envelope. |
+| `4` | `PRP_DATAGRAM_FIXED_ENVELOPE_STATUS` | Reserved encrypted status envelope. |
+
+The fixed profile uses version `1`, fixed header length `48`, maximum payload
+length `65535`, and currently defines no flags. Fixed session helpers select
+the same one-byte `suite_id` values as the active v1 cryptographic registry:
+`0x01`..`0x03` for classical `NN`/`NK`/`IK` and `0x11`..`0x13` for the
+corresponding ML-KEM-768 hybrid profiles.
+
 ## Mux Frame Types
 
 | Value | Symbol | Meaning |
