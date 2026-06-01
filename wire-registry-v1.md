@@ -1,9 +1,10 @@
 # PRP v1 Wire Registry
 
-This registry lists the v1 numeric identifiers that are stable protocol
-selectors in the current `libprp` implementation. Long names are diagnostic
-aliases unless a profile explicitly says otherwise. Unknown values fail closed
-for the current v1 profiles.
+This registry is the normative v1 numeric identifier registry for the current
+`libprp` implementation. Public headers must match these values, and
+`tests/wire_registry_test.py` fails the build if they drift. Long names are
+diagnostic aliases unless a profile explicitly says otherwise. Unknown values
+fail closed for the current v1 profiles.
 
 ## Transcript Profiles
 
