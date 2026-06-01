@@ -75,14 +75,21 @@ the cryptographic suite ids registered above.
 | ---: | --- | --- |
 | `1` | `PRP_DATAGRAM_FIXED_ENVELOPE_HANDSHAKE` | Fixed-envelope Noise handshake payload. |
 | `2` | `PRP_DATAGRAM_FIXED_ENVELOPE_PACKET` | Fixed-envelope encrypted packet payload. |
-| `3` | `PRP_DATAGRAM_FIXED_ENVELOPE_PACKET_FEEDBACK` | Reserved encrypted packet feedback envelope. |
-| `4` | `PRP_DATAGRAM_FIXED_ENVELOPE_STATUS` | Reserved encrypted status envelope. |
+| `3` | `PRP_DATAGRAM_FIXED_ENVELOPE_PACKET_FEEDBACK` | Native encrypted packet feedback envelope. |
+| `4` | `PRP_DATAGRAM_FIXED_ENVELOPE_STATUS` | Native encrypted status envelope. |
 
 The fixed profile uses version `1`, fixed header length `48`, maximum payload
 length `65535`, and currently defines no flags. Fixed session helpers select
 the same one-byte `suite_id` values as the active v1 cryptographic registry:
 `0x01`..`0x03` for classical `NN`/`NK`/`IK` and `0x11`..`0x13` for the
 corresponding ML-KEM-768 hybrid profiles.
+
+Native fixed feedback uses the fixed header as AEAD associated data and does
+not carry an inner `PRPP` packet. `PACKET_FEEDBACK` with empty encrypted
+plaintext is an ACK for `message_id`; `PACKET_FEEDBACK` with a 4-byte encrypted
+plaintext is a NACK whose plaintext is the missing `fragment_index` in network
+byte order. `STATUS` carries a 4-byte encrypted plaintext: 16-bit status code
+followed by 16-bit status detail.
 
 ## Mux Frame Types
 
