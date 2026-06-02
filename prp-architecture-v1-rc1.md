@@ -640,7 +640,18 @@ preserve the following architectural constraints:
 * textual suite names are diagnostic aliases only;
 * textual suite names must not be required carrier metadata;
 * a relationship-selected session must not rely on globally meaningful address
-  or suite strings to become intelligible to intermediaries.
+  or suite strings to become intelligible to intermediaries;
+* PRP operates on complete PRP units: a handshake unit or an encrypted packet
+  unit;
+* the base protocol does not define byte-stream delimitation, carrier
+  fragmentation, media checksums, physical retransmission, or
+  resynchronization markers;
+* carrier bindings that do not preserve PRP unit boundaries must use an
+  encapsulation profile that reconstructs exactly one complete PRP unit before
+  passing it to the PRP decoder;
+* encapsulation profiles must not define PRP relationship semantics, peer
+  identity, route identity, service authorization, packet replay rules,
+  cryptographic suite negotiation, or application payload semantics.
 
 The practical consequence is that a PRP packet, stream, carrier or bootstrap
 binding may inherit framing context from lower layers, but the cryptographic

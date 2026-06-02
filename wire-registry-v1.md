@@ -64,11 +64,12 @@ Packet type values `0` and `65535` are reserved. The v1 known flag mask is
 | `1` | `PRP_DATAGRAM_HANDSHAKE_TYPE_MESSAGE1` | Initiator-to-responder Noise message. |
 | `2` | `PRP_DATAGRAM_HANDSHAKE_TYPE_MESSAGE2` | Responder-to-initiator Noise message. |
 
-## Fixed Datagram Candidate Envelopes
+## Fixed Datagram Envelopes
 
-The fixed datagram profile is a candidate migration profile for carriers and
-dataplanes that prefer a constant 48-byte low-level header. It is not the
-current v1 `PRPH`/`PRPP` wire format. Classical and hybrid suites still use
+The fixed datagram profile is the v1 packet-first target for carriers and
+dataplanes. It uses a constant 48-byte low-level header without an ASCII magic
+prefix; the lower carrier binding identifies PRP traffic and delivers one
+complete PRP unit before this header is parsed. Classical and hybrid suites use
 the cryptographic suite ids registered above.
 
 | Value | Symbol | Meaning |
