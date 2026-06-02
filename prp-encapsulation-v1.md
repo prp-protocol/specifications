@@ -76,6 +76,38 @@ These declarations are carrier behavior, not PRP relationship semantics. They
 must not change peer authentication, route labels, service authorization,
 packet replay windows, cryptographic suites, or application payload formats.
 
+## Carrier Binding Record
+
+Carrier bindings should be documented with a small deterministic record. The
+record is a specification device, not a PRP header:
+
+```text
+binding_name
+traffic_selector
+unit_boundary
+encapsulation_profile
+maximum_reconstructed_unit
+loss_duplication_reordering_model
+reassembly_timeout
+local_error_behavior
+```
+
+`traffic_selector` names the lower-layer mechanism that identifies PRP traffic
+before PRP decoding starts. Examples include an EtherType, IP protocol number,
+UDP port, BLE characteristic, IPC endpoint, queue class, file record type, or a
+locally configured adapter binding. It is not a peer id, route id, service id,
+suite negotiation field, or application payload type.
+
+`unit_boundary` says whether the carrier already preserves one complete PRP
+unit or whether an encapsulation profile reconstructs it. The PRP decoder
+receives only the completed unit.
+
+`encapsulation_profile` must be one of the canonical names in this document
+unless a future version of this document registers a new profile. Carrier
+bindings may specialize local limits and timeout policy, but they must not
+change the profile's relationship, identity, route, replay, suite, service, or
+payload boundaries.
+
 ## `datagram-unit`
 
 `datagram-unit` is the direct mapping for carriers that naturally preserve
