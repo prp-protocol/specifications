@@ -52,20 +52,22 @@ selection.
 ## Transcript Context
 
 PRP binds the selected version, profile, and cryptographic suite into the
-Noise transcript with this binary context:
+Noise transcript with this compact binary context:
 
 | Offset | Size | Type | Meaning |
 | ---: | ---: | --- | --- |
-| 0 | 3 | bytes | ASCII `PRP` |
-| 3 | 1 | `uint8` | PRP wire version, currently `1` |
-| 4 | 1 | `uint8` | profile id |
-| 5 | 1 | `uint8` | suite id |
+| 0 | 1 | `uint8` | PRP wire version, currently `1` |
+| 1 | 1 | `uint8` | profile id |
+| 2 | 1 | `uint8` | suite id |
 
-This 6-byte context is not a negotiation transcript by itself. It is a
+This 3-byte context is not a negotiation transcript by itself. It is a
 deterministic value derived from local configuration, relationship documents,
 or a lower-layer carrier selection. Both peers mix the exact same context into
 the Noise transcript as prologue before the first handshake message. A mismatch
-aborts the handshake.
+aborts the handshake. This context is not a PRP packet header, carrier
+header, or self-identifying magic. It exists only as Noise prologue input and
+is not used by a receiver to discover PRP traffic; the lower carrier binding
+already performs that selection.
 
 A peer must not infer a different profile id or suite id after seeing
 handshake bytes, and must not retry with another suite as an automatic
@@ -221,7 +223,7 @@ The hybrid transcript order is deterministic:
 1. initialize `ck` and `h` with the suite-id-derived diagnostic name;
 2. for `NK` and `IK`, mix the responder static X25519 public key and then the
    responder static ML-KEM-768 public key into `h`;
-3. mix the 6-byte PRP transcript context into `h` as prologue;
+3. mix the 3-byte PRP transcript context into `h` as prologue;
 4. mix the initiator X25519 ephemeral public key into `h`;
 5. mix the ML-KEM public key or ciphertext bytes into `h` at the byte offset
    shown above;
