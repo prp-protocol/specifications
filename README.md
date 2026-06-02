@@ -28,6 +28,9 @@ This document defines the architectural foundations of PRP, including its relati
 * [`prp-wire-v1-draft.md`](prp-wire-v1-draft.md)
   Draft peer-visible PRP v1 wire contract for PRP units, transcript context, suites, handshake payloads, fixed datagram units, stream records, routed bootstrap, status payloads, and limits.
 
+* [`prp-encapsulation-v1.md`](prp-encapsulation-v1.md)
+  Draft carrier encapsulation profile contract for reconstructing complete PRP units over datagrams, byte streams, fragmented carriers, packet files, and IPC messages without defining relationship, identity, route, replay, service, suite, or application semantics.
+
 * [`wire-registry-v1.md`](wire-registry-v1.md)
   Canonical v1 wire identifier registry for PRP protocol profiles, suites, frames, services, routing, bootstrap, and dataplane control vocabularies.
 
@@ -176,4 +179,3 @@ Unless otherwise stated, documents in this repository are licensed under the **C
 You are free to share and adapt the material, including for commercial purposes, provided appropriate credit is given.
 
 See [`LICENSE`](LICENSE) for details.
-
