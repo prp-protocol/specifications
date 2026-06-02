@@ -309,9 +309,11 @@ handshake messages remain at or below 96 bytes.
 
 ## Stream Record Header
 
-Encrypted stream records are PRP frames. The frame header is authenticated as
-AEAD associated data. Stream records use implicit transport nonces and require
-reliable ordered delivery.
+Encrypted stream records are stream-profile PRP frames. The frame header is
+authenticated as AEAD associated data. Stream records use implicit transport
+nonces and require reliable ordered delivery. The ASCII `PRP1` field is a
+stream-record marker inside this profile; it is not a base PRP carrier selector,
+not a packet-profile header, and not used to discover PRP traffic.
 
 | Offset | Size | Type | Meaning |
 | ---: | ---: | --- | --- |
