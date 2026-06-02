@@ -118,7 +118,7 @@ closed.
 The v1 selector profile-code mapping is shown below. Profile ids are registry
 values; profile codes are compact wire values inside the selector byte.
 
-| Bits `7..6` | Profile id | Meaning |
+| Bits `7..6` | Registry profile id | Meaning |
 | ---: | ---: | --- |
 | `0b00` | `0x01` | direct anonymous `NN` |
 | `0b01` | `0x02` | routed bootstrap `NK` |
