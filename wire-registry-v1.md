@@ -35,6 +35,31 @@ fail closed for the current v1 profiles.
 | `3` | `PRP_RECORD_TYPE_ROUTE` | Encrypted route id during routed bootstrap. |
 | `4` | `PRP_RECORD_TYPE_ERROR` | Encrypted error status payload. |
 
+## Record Status Codes
+
+| Value | Symbol |
+| ---: | --- |
+| `0` | `PRP_RECORD_STATUS_NORMAL` |
+| `1` | `PRP_RECORD_STATUS_IO` |
+| `2` | `PRP_RECORD_STATUS_PROTOCOL` |
+| `3` | `PRP_RECORD_STATUS_POLICY` |
+| `4` | `PRP_RECORD_STATUS_CRYPTO` |
+| `5` | `PRP_RECORD_STATUS_STATE` |
+
+## Record Status Details
+
+| Value | Symbol |
+| ---: | --- |
+| `0` | `PRP_RECORD_DETAIL_NONE` |
+| `1` | `PRP_RECORD_DETAIL_EOF` |
+| `2` | `PRP_RECORD_DETAIL_SHUTDOWN` |
+| `3` | `PRP_RECORD_DETAIL_TIMEOUT` |
+| `4` | `PRP_RECORD_DETAIL_UNEXPECTED_RECORD` |
+| `5` | `PRP_RECORD_DETAIL_PAYLOAD_TOO_LARGE` |
+| `6` | `PRP_RECORD_DETAIL_SERVICE_DENIED` |
+| `7` | `PRP_RECORD_DETAIL_REPLAY` |
+| `8` | `PRP_RECORD_DETAIL_LOCAL_IO` |
+
 ## Packet Types
 
 | Value | Symbol | Meaning |
