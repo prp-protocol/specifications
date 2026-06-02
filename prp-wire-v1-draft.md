@@ -406,7 +406,7 @@ mutually authenticated `Noise_IK` using pre-provisioned peer public keys.
 
 | Limit | Value |
 | --- | ---: |
-| Transcript context length | 6 bytes |
+| Transcript context length | 3 bytes |
 | Fixed datagram header length | 48 bytes |
 | Fixed datagram max payload length | 65535 bytes |
 | Stream record header length | 22 bytes |
