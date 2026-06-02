@@ -25,6 +25,9 @@ This document defines the architectural foundations of PRP, including its relati
 * [`prp-architecture-v1-rc1.md`](prp-architecture-v1-rc1.md)
   Normative foundational architecture specification for PRP.
 
+* [`prp-wire-v1-draft.md`](prp-wire-v1-draft.md)
+  Draft peer-visible PRP v1 wire contract for PRP units, transcript context, suites, handshake payloads, fixed datagram units, stream records, routed bootstrap, status payloads, and limits.
+
 * [`wire-registry-v1.md`](wire-registry-v1.md)
   Canonical v1 wire identifier registry for PRP protocol profiles, suites, frames, services, routing, bootstrap, and dataplane control vocabularies.
 
