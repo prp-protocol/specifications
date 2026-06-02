@@ -71,8 +71,10 @@ is not used by a receiver to discover PRP traffic; the lower carrier binding
 already performs that selection.
 
 The selector uses the v1 profile-code mapping defined below for fixed
-datagrams: `0b00` means profile id `0x01`, `0b01` means profile id `0x02`,
-`0b10` means profile id `0x03`, and `0b11` is the extension/version escape.
+datagrams. Profile ids are registry values; profile codes are the compact
+two-bit wire values inside the selector. `0b00` maps to profile id `0x01`,
+`0b01` maps to profile id `0x02`, `0b10` maps to profile id `0x03`, and
+`0b11` is the extension/version escape.
 
 A peer must not infer a different profile id or suite id after seeing
 handshake bytes, and must not retry with another suite as an automatic
@@ -280,12 +282,15 @@ impose a lower MTU. Larger objects are handled by fragmentation and reassembly
 above the datagram payload boundary.
 
 The selector byte is not a participant identity. Bits `7..6` encode the fixed
-profile class and bits `5..0` encode the cryptographic suite id. Profile code
+profile code and bits `5..0` encode the cryptographic suite id. Profile ids
+are registry values; profile codes are compact wire values and are not copied
+from profile ids. Profile code
 `0b11` is reserved as an extension/version escape and is invalid for v1 fixed
 datagrams. The six-bit suite field admits values `0x00..0x3f`; unknown or
 unregistered suite ids fail closed.
 
-The v1 selector profile-code mapping is:
+The v1 selector profile-code mapping is shown below. Profile ids are registry
+values; profile codes are compact wire values inside the selector byte.
 
 | Bits `7..6` | Profile id | Meaning |
 | ---: | ---: | --- |

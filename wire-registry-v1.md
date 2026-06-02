@@ -115,7 +115,8 @@ hybrid profiles. Unknown selector profile codes or unregistered suite ids fail
 closed.
 
 
-The v1 selector profile-code mapping is:
+The v1 selector profile-code mapping is shown below. Profile ids are registry
+values; profile codes are compact wire values inside the selector byte.
 
 | Bits `7..6` | Profile id | Meaning |
 | ---: | ---: | --- |
