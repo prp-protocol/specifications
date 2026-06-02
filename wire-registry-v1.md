@@ -104,11 +104,25 @@ the cryptographic suite ids registered above.
 | `3` | `PRP_DATAGRAM_FIXED_ENVELOPE_PACKET_FEEDBACK` | Native encrypted packet feedback envelope. |
 | `4` | `PRP_DATAGRAM_FIXED_ENVELOPE_STATUS` | Native encrypted status envelope. |
 
-The fixed profile uses version `1`, fixed header length `48`, maximum payload
-length `65535`, and currently defines no flags. Fixed session helpers select
-the same one-byte `suite_id` values as the active v1 cryptographic registry:
-`0x01`..`0x03` for classical `NN`/`NK`/`IK` and `0x11`..`0x13` for the
-corresponding ML-KEM-768 hybrid profiles.
+The fixed profile uses fixed header length `48`, maximum payload length
+`65535`, and currently defines no flags. Its first byte is a compact selector:
+bits `7..6` carry the fixed profile code and bits `5..0` carry the suite id.
+Profile code `0b11` is reserved as an extension/version escape and is invalid
+for v1 fixed datagrams. The six-bit suite field uses the active v1
+cryptographic registry values that fit in `0x00..0x3f`: `0x01`..`0x03` for
+classical `NN`/`NK`/`IK` and `0x11`..`0x13` for the corresponding ML-KEM-768
+hybrid profiles. Unknown selector profile codes or unregistered suite ids fail
+closed.
+
+
+The v1 selector profile-code mapping is:
+
+| Bits `7..6` | Profile id | Meaning |
+| ---: | ---: | --- |
+| `0b00` | `0x01` | direct anonymous `NN` |
+| `0b01` | `0x02` | routed bootstrap `NK` |
+| `0b10` | `0x03` | configured relationship `NK` or `IK` |
+| `0b11` | n/a | extension/version escape; invalid for v1 |
 
 Native fixed feedback uses the fixed header as AEAD associated data and does
 not carry an inner `PRPP` packet. `PACKET_FEEDBACK` with empty encrypted

@@ -250,10 +250,10 @@ The first 8 bytes are the common prefix:
 
 | Offset | Size | Type | Meaning |
 | ---: | ---: | --- | --- |
-| 0 | 1 | `uint8` | datagram profile version, currently `1` |
+| 0 | 1 | `uint8` | selector: profile code in bits `7..6`, suite id in bits `5..0` |
 | 1 | 1 | `uint8` | envelope kind |
 | 2 | 1 | `uint8` | flags |
-| 3 | 1 | `uint8` | handshake or relationship profile id |
+| 3 | 1 | `uint8` | reserved, encoded as zero |
 | 4 | 2 | `uint16` | payload length |
 | 6 | 2 | `uint16` | reserved, encoded as zero |
 
@@ -261,7 +261,7 @@ The fixed header context after the common prefix is:
 
 | Offset | Size | Type | Meaning |
 | ---: | ---: | --- | --- |
-| 8 | 1 | `uint8` | suite id for handshake envelopes; zero when selected by session state |
+| 8 | 1 | `uint8` | reserved, encoded as zero |
 | 9 | 1 | `uint8` | handshake message type for handshake envelopes; zero otherwise |
 | 10 | 6 | bytes | reserved, encoded as zero |
 | 16 | 8 | bytes | session id for encrypted packet envelopes; zero otherwise |
@@ -276,6 +276,21 @@ The fixed header context after the common prefix is:
 payloads up to 65535 bytes while allowing a carrier or deployment profile to
 impose a lower MTU. Larger objects are handled by fragmentation and reassembly
 above the datagram payload boundary.
+
+The selector byte is not a participant identity. Bits `7..6` encode the fixed
+profile class and bits `5..0` encode the cryptographic suite id. Profile code
+`0b11` is reserved as an extension/version escape and is invalid for v1 fixed
+datagrams. The six-bit suite field admits values `0x00..0x3f`; unknown or
+unregistered suite ids fail closed.
+
+The v1 selector profile-code mapping is:
+
+| Bits `7..6` | Profile id | Meaning |
+| ---: | ---: | --- |
+| `0b00` | `0x01` | direct anonymous `NN` |
+| `0b01` | `0x02` | routed bootstrap `NK` |
+| `0b10` | `0x03` | configured relationship `NK` or `IK` |
+| `0b11` | n/a | extension/version escape; invalid for v1 |
 
 The fixed datagram enum space is assigned by `wire-registry-v1.md`. The v1
 envelope kinds are:
