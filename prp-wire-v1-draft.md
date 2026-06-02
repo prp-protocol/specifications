@@ -39,7 +39,10 @@ markers. Those mechanisms belong below PRP.
 Carrier bindings that preserve PRP unit boundaries may deliver each unit
 directly to the appropriate PRP decoder. Carrier bindings that do not preserve
 PRP unit boundaries must use an encapsulation profile that reconstructs exactly
-one complete PRP unit before passing it to the PRP decoder.
+one complete PRP unit before passing it to the PRP decoder. Carrier
+fragmentation is therefore below PRP and is distinct from packet-profile
+message fragmentation, where several independently authenticated PRP packet
+units carry one logical message.
 
 Encapsulation profiles must not define PRP relationship semantics, peer
 identity, route identity, service authorization, packet replay rules,
