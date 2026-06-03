@@ -430,6 +430,40 @@ An implementation remains compatible with the PRP architecture if communication 
 
 provided that sufficient local relationship information remains available.
 
+## Recursive Aggregation Test
+
+Aggregators are recursive roles. An aggregator is a participant that assumes
+aggregation responsibility within a local routing context. The same actor may be
+an aggregator for one relationship, a normal participant relative to another
+aggregator, an ingress aggregation role in one route, a transit aggregation role
+in another route, and an egress aggregation role in another route.
+
+PRP does not replace global participant addresses with global aggregator
+addresses. It replaces global addressing with recursively delegated aggregation
+responsibility. Participants may select, authorize, or request ingress and egress
+aggregation contexts, but they are not required to compute a complete global path
+between all aggregation roles. Each aggregation level performs local admission,
+local opaque-label handling, and local delegation to another relationship when
+needed.
+
+A compatible routing implementation therefore must not require:
+
+* globally privileged aggregators;
+* globally meaningful aggregator addresses;
+* a fixed global aggregator namespace;
+* route-discovery flooding through an aggregator network;
+* edge computation of a complete participant-to-participant path.
+
+The expected routing model is:
+
+```text
+Participants choose or authorize aggregation contexts.
+Aggregators recursively delegate aggregation responsibility.
+Route agreements bound and validate the resulting forwarding graph.
+Dataplane forwarding uses local opaque labels only.
+No participant or aggregator requires a globally meaningful destination address.
+```
+
 ---
 
 # 4. Architectural Principles
