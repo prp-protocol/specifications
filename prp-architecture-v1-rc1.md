@@ -464,6 +464,31 @@ Dataplane forwarding uses local opaque labels only.
 No participant or aggregator requires a globally meaningful destination address.
 ```
 
+## Inter-Aggregator Batch Transfer Test
+
+Inter-aggregator transfer is packet-first by default. Aggregators do not need to
+preserve a one-to-one mapping between incoming routed payloads and outgoing
+adjacent PRP packets. Immediate forwarding is a valid low-latency policy, but it
+is not a base architectural requirement.
+
+A compatible aggregation implementation may retain, batch, pad, shape,
+multiplex, or reencapsulate multiple routed payloads into an inter-aggregator
+batch envelope carried over an ordinary adjacent PRP packet session. The batch
+envelope is adjacent-session payload, not a base PRP packet profile unless a
+future profile explicitly defines it as such.
+
+The architecture must keep these objects distinct:
+
+* routed payload;
+* inter-aggregator batch envelope;
+* adjacent PRP packet;
+* carrier packet or carrier unit.
+
+Reliable stream transfer is optional and applies only when the selected transfer
+policy requires ordered byte delivery, retransmission, flow control, sustained
+backpressure, or virtual-frame preservation. PRP routing must not become
+stream-first.
+
 ---
 
 # 4. Architectural Principles
