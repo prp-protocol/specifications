@@ -326,7 +326,7 @@ A PRP unit is a complete object passed to a PRP processing layer.
 
 A PRP unit may be:
 
-* a handshake unit;
+* a session-establishment handshake unit;
 * an encrypted packet unit;
 * a profile-defined unit;
 * a future extension-defined unit.
@@ -356,6 +356,12 @@ A reliable stream adapter MAY be defined as an extension above packet-oriented P
 ## 8. Session Boundary
 
 A PRP session is an authenticated exchange context used to realize a relationship or adjacent relationship.
+
+A participant relationship may have one or more cryptographic sessions. A cryptographic session may carry one or more routing contexts when all routing contexts are scoped to the same participant relationship, share the same effective cryptographic policy, use the same session-level direction sequence space, share the same replay domain, and have the same session lifecycle.
+
+Session establishment is per cryptographic session, not per route. A handshake unit is one concrete session-establishment unit; a future explicitly specified session agreement may establish a session when it provides equivalent ephemeral exchange, transcript binding, suite and profile selection, policy binding, and cryptographic confirmation.
+
+A routing context MUST NOT reuse the same traffic keys with an independent nonce, sequence, replay, policy, carrier-binding, rekey, or lifecycle domain. If any of those domains differ, the participant MUST establish a separate cryptographic session or derive a domain-separated traffic key bound to the differing context.
 
 A session may be direct, routed, aggregated, or carrier-mediated.
 
@@ -429,6 +435,8 @@ The PRP core does not require:
 * open network-wide route discovery.
 
 Routing mechanisms MAY be defined as extensions.
+
+A route or routing context does not require a new cryptographic session merely because it exists. It may share an established session when it remains in the same relationship and the same session cryptographic domain.
 
 Such mechanisms MUST preserve relationship primacy and local routing semantics.
 

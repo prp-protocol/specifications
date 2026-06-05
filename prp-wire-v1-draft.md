@@ -23,8 +23,8 @@ reserved bytes, unsupported lengths, or locally disabled features.
 
 ## PRP Units and Carrier Framing
 
-PRP operates on complete PRP units. A PRP unit is either a handshake unit or an
-encrypted packet unit.
+PRP operates on complete PRP units. A PRP unit is either a session-establishment
+handshake unit or an encrypted packet unit.
 
 PRP expects a lower framing layer to deliver exactly one complete PRP unit to
 the PRP decoder and to identify that the delivered bytes are PRP bytes.

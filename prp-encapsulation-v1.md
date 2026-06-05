@@ -8,7 +8,7 @@ natively preserve PRP unit boundaries.
 
 A PRP unit is either:
 
-- a handshake unit;
+- a session-establishment handshake unit;
 - an encrypted packet unit.
 
 The base PRP protocol consumes complete PRP units. It does not define

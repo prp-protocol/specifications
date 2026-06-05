@@ -267,6 +267,8 @@ Transport is the authenticated exchange of information between participants.
 
 Transport exists to realize relationships.
 
+A participant relationship may be realized by one or more cryptographic sessions. A cryptographic session may carry one or more routing contexts when those contexts share the same effective cryptographic policy, direction sequence space, replay domain, and session lifecycle. Session establishment is per cryptographic session, not per route.
+
 ---
 
 ## Carrier
@@ -700,8 +702,12 @@ preserve the following architectural constraints:
 * textual suite names must not be required carrier metadata;
 * a relationship-selected session must not rely on globally meaningful address
   or suite strings to become intelligible to intermediaries;
-* PRP operates on complete PRP units: a handshake unit or an encrypted packet
-  unit;
+* PRP operates on complete PRP units: a session-establishment handshake
+  unit or an encrypted packet unit;
+* session establishment is per cryptographic session, not per route;
+* a compatible cryptographic session may carry multiple routing contexts only
+  when they share the same effective cryptographic policy, direction sequence
+  space, replay domain, and session lifecycle;
 * the base protocol does not define byte-stream delimitation, carrier
   fragmentation, media checksums, physical retransmission, or
   resynchronization markers;
