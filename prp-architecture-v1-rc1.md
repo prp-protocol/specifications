@@ -466,6 +466,18 @@ Dataplane forwarding uses local opaque labels only.
 No participant or aggregator requires a globally meaningful destination address.
 ```
 
+## Discovery, Transit, and Endpoint Visibility Test
+
+PRP does not define providers as special protocol roles. A provider-like component is a bootstrap transport agent or a participant acting as a Provisional Transit Aggregator in a local context. Any participant capable of accepting opaque PRP payloads and forwarding them by another relationship, carrier, or aggregation context can act as a Transit Aggregator.
+
+Adjacency is an operational property of a forwarding step: the adjacent participant is the next PRP participant that receives the current unit or envelope. Adjacent relationships are not a special class of relationship. A relationship remains an ordinary relationship whether it is used for direct communication, transit forwarding, cartorial attestation, measurement, provisioning, or legacy ingress and egress.
+
+Local clear advertisements may announce PRP support, ability to accept NN, transit or aggregation capability, carrier profiles, and basic limits. They must not establish trust, identity, authorization, relationship continuity, route validity, or cartorial uniqueness. Nodes discovered this way start as Provisional Transit Aggregators and become trusted only through local policy, prior relationship material, or cartorial attestation.
+
+Endpoint visibility is separate from payload confidentiality. A compatible implementation may model visible-endpoints, aggregator-visible-endpoints, and hidden-endpoints policies. Strong hidden-endpoint claims require mechanisms such as layered transit, label compartmentalization, batching, padding, mix windows, multipath, or cover traffic.
+
+Candidate trajectory selection should account for crypto_stack_depth: the number of independent cryptographic protection layers that a payload must traverse or be wrapped in. PRP should add cryptographic layers only when the layer buys a measurable security property, such as hiding endpoint mapping, crossing a trust boundary, separating nonce or replay domains, or protecting metadata. Physical, L2, L3, carrier, switch, router, or bridge hops are not PRP hops unless a PRP participant interprets an envelope or routing context and performs PRP-level forwarding.
+
 ## Inter-Aggregator Batch Transfer Test
 
 Inter-aggregator transfer is packet-first by default. Aggregators do not need to

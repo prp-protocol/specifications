@@ -355,7 +355,7 @@ A reliable stream adapter MAY be defined as an extension above packet-oriented P
 
 ## 8. Session Boundary
 
-A PRP session is an authenticated exchange context used to realize a relationship or adjacent relationship.
+A PRP session is an authenticated exchange context used to realize a relationship. A session may also be used for an adjacent forwarding step, but adjacency is an operational property of that step, not a special class of relationship.
 
 A participant relationship may have one or more cryptographic sessions. A cryptographic session may carry one or more routing contexts when all routing contexts are scoped to the same participant relationship, share the same effective cryptographic policy, use the same session-level direction sequence space, share the same replay domain, and have the same session lifecycle.
 
@@ -381,13 +381,13 @@ A PRP implementation MUST NOT infer or negotiate a different cryptographic profi
 
 A PRP implementation MUST NOT silently downgrade cryptographic profiles.
 
-### 8.2 Adjacent Sessions
+### 8.2 Adjacent Forwarding Sessions
 
-An adjacent PRP session is a session between local PRP actors, such as a participant and an aggregation context or two aggregation contexts.
+An adjacent PRP session is an ordinary PRP session used with the next PRP participant that receives the current unit or envelope. Adjacency is operational, not a relationship class.
 
-Adjacent sessions MAY carry opaque routed payloads.
+Adjacent forwarding sessions MAY carry opaque routed payloads.
 
-Adjacent sessions do not imply visibility into end-to-end payload semantics.
+Adjacent forwarding sessions do not imply visibility into end-to-end payload semantics.
 
 Intermediate actors MUST NOT be required to inspect end-to-end payloads.
 
