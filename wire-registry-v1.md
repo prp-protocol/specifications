@@ -207,6 +207,7 @@ Routing v1 has no defined flags; the known flag mask is `0x0000`.
 | `1001` | `prp.telemetry` | Telemetry payloads for examples/tools. |
 | `2001` | `prp.control` | Control payloads for examples/tools. |
 | `3001` | `prp.routing.egress` | Routing egress envelope over adjacent PRP sessions. |
+| `3002` | `prp.measurement` | Rate-limited path and candidate trajectory measurement. |
 
 Service ids are dispatch labels inside an established relationship. They are
 not global capabilities, identities, or carrier selectors.
