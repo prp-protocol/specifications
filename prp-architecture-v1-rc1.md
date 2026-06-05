@@ -468,7 +468,7 @@ No participant or aggregator requires a globally meaningful destination address.
 
 ## Discovery, Transit, and Endpoint Visibility Test
 
-PRP does not define providers as special protocol roles. A provider-like component is a bootstrap transport agent or a participant acting as a Provisional Transit Aggregator in a local context. Any participant capable of accepting opaque PRP payloads and forwarding them by another relationship, carrier, or aggregation context can act as a Transit Aggregator.
+PRP does not define bootstrap transport agents as special protocol roles. A bootstrap transport agent is a participant or local transport service acting as a Provisional Transit Aggregator in a local context. Any participant capable of accepting opaque PRP payloads and forwarding them by another relationship, carrier, or aggregation context can act as a Transit Aggregator.
 
 Adjacency is an operational property of a forwarding step: the adjacent participant is the next PRP participant that receives the current unit or envelope. Adjacent relationships are not a special class of relationship. A relationship remains an ordinary relationship whether it is used for direct communication, transit forwarding, cartorial attestation, measurement, provisioning, or legacy ingress and egress.
 

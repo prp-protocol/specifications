@@ -606,7 +606,7 @@ It does not guarantee anonymity.
 
 It does not eliminate traffic analysis.
 
-It does not eliminate timing, size, carrier, provider, or service metadata.
+It does not eliminate timing, size, carrier, bootstrap transport, or service metadata.
 
 PRP implementations SHOULD minimize unnecessary exposure of:
 

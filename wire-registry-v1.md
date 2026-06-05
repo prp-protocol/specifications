@@ -193,12 +193,12 @@ Routing v1 has no defined flags; the known flag mask is `0x0000`.
 | `0` | `PRP_ROUTING_EMISSION_IMMEDIATE` | Immediate emission. |
 | `1` | `PRP_ROUTING_EMISSION_WINDOWED` | Windowed emission. |
 
-## Bootstrap Provider Frames
+## Bootstrap Transport Frames
 
 | Value | Symbol | Meaning |
 | ---: | --- | --- |
-| `1` | `PRP_BOOTSTRAP_PROVIDER_FRAME_ATTEMPT` | Provider-local transport attempt. |
-| `2` | `PRP_BOOTSTRAP_PROVIDER_FRAME_NOT_TRANSPORTED` | Fast denial: provider does not transport. |
+| `1` | `PRP_BOOTSTRAP_TRANSPORT_FRAME_ATTEMPT` | Bootstrap transport attempt. |
+| `2` | `PRP_BOOTSTRAP_TRANSPORT_FRAME_NOT_TRANSPORTED` | Fast denial: bootstrap transport agent does not transport. |
 
 ## Reserved Service Names
 

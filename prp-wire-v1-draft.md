@@ -4,7 +4,7 @@ Status: Draft
 
 This document defines the peer-visible PRP v1 wire contracts that are shared
 by conforming implementations. The canonical numeric registry for profile ids,
-suite ids, frame ids, status ids, routing ids, bootstrap-provider ids, and
+suite ids, frame ids, status ids, routing ids, bootstrap transport ids, and
 service ids is `wire-registry-v1.md` in this repository.
 
 This document does not define implementation APIs, tool behavior, local
