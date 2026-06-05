@@ -126,14 +126,14 @@ values; profile codes are compact wire values inside the selector byte.
 | `0b11` | n/a | extension/version escape; invalid for v1 |
 
 Native fixed feedback uses the fixed header as AEAD associated data and does
-not carry an inner `PRPP` packet. `PACKET_FEEDBACK` with empty encrypted
+not carry a separate inner packet unit. `PACKET_FEEDBACK` with empty encrypted
 plaintext is an ACK for `message_id`; `PACKET_FEEDBACK` with a 4-byte encrypted
 plaintext is a NACK whose plaintext is the missing `fragment_index` in network
 byte order. `STATUS` carries a 4-byte encrypted plaintext: 16-bit status code
 followed by 16-bit status detail.
 
 Native fixed `PACKET` also uses the fixed header as AEAD associated data and
-does not carry an inner `PRPP` packet. Its encrypted plaintext starts with
+does not carry a separate inner packet unit. Its encrypted plaintext starts with
 `uint16 type`, `uint16 flags`, and `uint32 plaintext_offset`, followed by the
 application packet plaintext. The fixed header carries session id, sequence,
 message id, fragment index/count, and total plaintext length.
