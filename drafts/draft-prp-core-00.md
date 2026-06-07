@@ -391,6 +391,47 @@ Adjacent forwarding sessions do not imply visibility into end-to-end payload sem
 
 Intermediate actors MUST NOT be required to inspect end-to-end payloads.
 
+### 8.3 Logical Hop-Chain Sessions
+
+A PRP hop is any participant that processes a PRP envelope. Origin, transit,
+target, carrier-bridge, and final-participant behavior are operational roles,
+not mandatory packet classes.
+
+A session MAY be cryptographically direct even when the peer is reached through
+opaque transit. For example, in `A -> B -> C -> D`, A MAY establish `session_AB`
+with B, `session_AC` with C through B as opaque transit, and `session_AD` with D
+through B/C as opaque transit. Transit hops that carry establishment bytes for a
+later hop are not cryptographic parties to that later session.
+
+Established hop-chain sessions MAY be reused for later packets while their
+relationship, policy, sequence/replay domain, validity, carrier binding, rekey
+policy, and lifecycle remain compatible. A routing context MUST NOT trigger a
+new session establishment merely because it is a new route.
+
+### 8.4 Detached Hop Envelopes
+
+A routing profile MAY carry a small AEAD-protected hop envelope plus a detached
+opaque payload. The hop envelope MUST bind the detached payload by carrying a
+payload length, commitment profile, and payload commitment inside the
+authenticated envelope.
+
+Each receiving hop MUST validate its own envelope before forwarding or local
+delivery. Validation includes AEAD success, version, flags, policy context,
+sequence/replay state, hop limit, payload length, commitment profile policy,
+payload commitment, local action authorization, and session lifecycle. Unknown
+profiles, unsupported flags, commitment mismatch, replay, expired sessions, and
+uncommitted payloads without explicit `NONE` policy MUST fail closed.
+
+The final participant uses the same envelope validation model. Local delivery is
+a local action, not a different packet format.
+
+`XXH3-64` is the recommended low-cost commitment profile when the expected
+commitment value is protected by the hop envelope AEAD. `BLAKE3-128` and
+`BLAKE3-256` MAY be selected by policy when a cryptographic hash commitment is
+required in addition to AEAD. `NONE` MUST NOT be accepted unless effective
+relationship, session, or route policy explicitly permits uncommitted detached
+payloads for that context.
+
 ## 9. Carrier Boundary
 
 A carrier adapter moves PRP units across a concrete medium.
@@ -641,4 +682,3 @@ Such requests are outside the scope of this document.
 * Alves, G. J. Relationship-Centric Communication: The Participant Relationship Protocol (PRP). Zenodo, 2026. DOI: 10.5281/zenodo.20482932.
 * Alves, G. J. Relationship-Centric Routing Without Global Addresses. Zenodo, 2026.
 * PRP Architecture v1: Participant Relationship Protocol. Release Candidate 1.
-

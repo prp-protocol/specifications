@@ -193,6 +193,26 @@ Routing v1 has no defined flags; the known flag mask is `0x0000`.
 | `0` | `PRP_ROUTING_EMISSION_IMMEDIATE` | Immediate emission. |
 | `1` | `PRP_ROUTING_EMISSION_WINDOWED` | Windowed emission. |
 
+## Routing Detached Hop Actions
+
+| Value | Symbol | Meaning |
+| ---: | --- | --- |
+| `1` | `PRP_ROUTING_ACTION_FORWARD` | Forward the detached payload according to local routing policy. |
+| `2` | `PRP_ROUTING_ACTION_LOCAL_DELIVER` | Deliver the detached payload to local upper-layer handling. |
+| `3` | `PRP_ROUTING_ACTION_REJECT` | Reject the detached payload or context. |
+| `4` | `PRP_ROUTING_ACTION_RESPOND` | Produce a local response according to policy. |
+
+## Routing Detached Payload Commitment Profiles
+
+| Value | Symbol | Commitment bytes | Meaning |
+| ---: | --- | ---: | --- |
+| `0x00` | `PRP_ROUTING_COMMITMENT_NONE` | 0 | No detached payload commitment; valid only when effective policy explicitly allows it. |
+| `0x01` | `PRP_ROUTING_COMMITMENT_XXH3_32` | 4 | Low-cost XXH3-derived 32-bit commitment. |
+| `0x02` | `PRP_ROUTING_COMMITMENT_XXH3_64` | 8 | Recommended low-cost general detached payload commitment inside a hop AEAD envelope. |
+| `0x03` | `PRP_ROUTING_COMMITMENT_XXH3_128` | 16 | Low-cost XXH3 128-bit commitment. |
+| `0x10` | `PRP_ROUTING_COMMITMENT_BLAKE3_128` | 16 | BLAKE3 128-bit hash commitment. |
+| `0x11` | `PRP_ROUTING_COMMITMENT_BLAKE3_256` | 32 | BLAKE3 256-bit hash commitment. |
+
 ## Bootstrap Transport Frames
 
 | Value | Symbol | Meaning |

@@ -400,6 +400,48 @@ configured `Noise_NK` or `Noise_IK` handshake starts a separate transcript and
 produces separate transport keys. The route record never authorizes application
 traffic by itself.
 
+## Detached Routing Hop Envelope
+
+A routing profile may carry a detached hop envelope as plaintext inside the
+encrypted/authenticated payload of the selected hop session. This object is not
+a fixed datagram header, not carrier framing, and not a separate final-recipient
+packet class. The hop session AEAD authenticates the envelope before the
+receiver acts on it.
+
+The detached payload is supplied by the surrounding routing profile or carrier
+unit. It is not embedded in the envelope. The envelope binds that detached
+payload by authenticating its length, commitment profile, and commitment bytes.
+
+All integer fields are unsigned big-endian:
+
+| Offset | Size | Type | Meaning |
+| ---: | ---: | --- | --- |
+| 0 | 1 | `uint8` | version, currently `1` |
+| 1 | 1 | `uint8` | local action: `1` forward, `2` local-deliver, `3` reject, `4` respond |
+| 2 | 2 | `uint16` | flags, currently `0` |
+| 4 | 1 | `uint8` | hop limit |
+| 5 | 1 | `uint8` | commitment profile |
+| 6 | 2 | bytes | reserved, must be zero |
+| 8 | 8 | `uint64` | session-direction sequence or sequence binding supplied by the encrypted hop session |
+| 16 | 16 | bytes | local route id or route context label |
+| 32 | 16 | bytes | policy context hash or selector |
+| 48 | 4 | `uint32` | detached payload length |
+| 52 | 1 | `uint8` | payload commitment length |
+| 53 | 3 | bytes | reserved, must be zero |
+| 56 | variable | bytes | payload commitment |
+
+Receivers MUST reject unknown versions, unsupported flags, invalid local
+actions, zero hop limits, unsupported commitment profiles, payload commitment
+length mismatches, detached payload length mismatches, commitment mismatches,
+replay, expired sessions, and local actions not authorized by effective policy.
+
+The final participant uses the same envelope layout as a transit hop. The
+difference is only local action: `local-deliver` instead of `forward`.
+
+Detached routing commitment profile ids are assigned by
+`wire-registry-v1.md`. `XXH3-64` is the recommended general-purpose profile
+when the commitment value is authenticated by the hop session AEAD.
+
 ## Status Payload
 
 `PRP_RECORD_TYPE_CLOSE`, `PRP_RECORD_TYPE_ERROR`, and fixed datagram status

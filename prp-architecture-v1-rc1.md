@@ -503,6 +503,48 @@ policy requires ordered byte delivery, retransmission, flow control, sustained
 backpressure, or virtual-frame preservation. PRP routing must not become
 stream-first.
 
+## Detached Hop-Chain Routing Test
+
+A PRP hop is any participant that processes a PRP envelope. Origin
+participants, transit aggregators, target aggregators, carrier bridges, and
+final participants are local roles, not mandatory wire-visible packet classes.
+Final delivery is a local action selected after validating the same envelope
+format used by any other hop.
+
+Cryptographic directness is separate from physical reachability. In a chain:
+
+```text
+A -> B -> C -> D
+```
+
+A compatible implementation may establish `session_AB`, `session_AC`, and
+`session_AD`. B can transport A-C establishment bytes as opaque routed payload,
+and B/C can transport A-D establishment bytes as opaque routed payload. B is not
+a cryptographic party to `session_AC`; B and C are not cryptographic parties to
+`session_AD`.
+
+For multi-hop forwarding, a compatible routing profile may use a detached hop
+envelope: a small AEAD-protected envelope bound to a detached opaque payload by
+a payload commitment. The detached payload is not reencrypted in full merely
+because a transit hop forwards it. Each hop validates its own envelope,
+sequence/replay domain, hop limit, policy context, payload length, commitment
+profile, and payload commitment before it forwards, delivers locally, rejects,
+or responds.
+
+`XXH3-64` is the recommended low-cost detached payload commitment when the
+commitment value is authenticated by the hop envelope AEAD. `BLAKE3-128` and
+`BLAKE3-256` may be selected by policy for deployments that require a
+cryptographic hash commitment in addition to AEAD. `NONE` is fail-closed by
+default and is valid only when explicitly allowed by effective policy.
+
+Detached hop-chain routing must not require:
+
+* a different packet format for final participants;
+* origin/transit/final role markers in cleartext;
+* full-hop encryption of an already protected inner payload as the default;
+* renegotiating a cryptographic session per packet;
+* cartorial or notarial participation in the dataplane.
+
 ---
 
 # 4. Architectural Principles
