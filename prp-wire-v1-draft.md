@@ -408,9 +408,18 @@ a fixed datagram header, not carrier framing, and not a separate final-recipient
 packet class. The hop session AEAD authenticates the envelope before the
 receiver acts on it.
 
-The detached payload is supplied by the surrounding routing profile or carrier
-unit. It is not embedded in the envelope. The envelope binds that detached
-payload by authenticating its length, commitment profile, and commitment bytes.
+The detached payload is supplied by the surrounding routing profile, not by the
+base PRP unit grammar. It is not embedded in the envelope. The envelope binds
+that detached payload by authenticating its length, commitment profile, and
+commitment bytes.
+
+This section defines the detached hop envelope object only. It does not define a
+new base PRP unit, a carrier framing rule, a fixed datagram envelope kind, or a
+byte-stream delimiter. A carrier or local daemon contract may decide how the hop
+envelope object and its detached payload are handed to the next local component,
+but that handoff remains below or beside this routing object and MUST NOT change
+relationship, session, replay, route, service, or payload semantics.
+
 Some implementations may expose a local packed handoff shape such as
 `DETACHED_ENVELOPE || DETACHED_PAYLOAD` between role daemons. That packed shape
 is an implementation or carrier-adapter contract, not an additional base PRP
