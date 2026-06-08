@@ -411,6 +411,11 @@ receiver acts on it.
 The detached payload is supplied by the surrounding routing profile or carrier
 unit. It is not embedded in the envelope. The envelope binds that detached
 payload by authenticating its length, commitment profile, and commitment bytes.
+Some implementations may expose a local packed handoff shape such as
+`DETACHED_ENVELOPE || DETACHED_PAYLOAD` between role daemons. That packed shape
+is an implementation or carrier-adapter contract, not an additional base PRP
+unit type and not a requirement for carriers that already preserve PRP unit or
+routing-profile boundaries.
 
 All integer fields are unsigned big-endian:
 
