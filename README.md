@@ -26,7 +26,11 @@ This document defines the architectural foundations of PRP, including its relati
   Normative foundational architecture specification for PRP.
 
 * [`prp-wire-v1-draft.md`](prp-wire-v1-draft.md)
-  Draft peer-visible PRP v1 wire contract for PRP units, transcript context, suites, handshake payloads, fixed datagram units, stream records, routed bootstrap, status payloads, and limits.
+  Draft fixed/stream PRP v1 wire contract for PRP units, transcript context,
+  suites, handshake payloads, fixed datagram units, stream records, routed
+  bootstrap, status payloads, and limits. It is not the Linux adjacent opaque
+  fastpath format, whose established protected traffic exposes only
+  `adjacency_nonce || adjacency_ciphertext || adjacency_tag`.
 
 * [`prp-encapsulation-v1.md`](prp-encapsulation-v1.md)
   Draft carrier encapsulation profile contract for reconstructing complete PRP units over datagrams, byte streams, fragmented carriers, packet files, and IPC messages without defining relationship, identity, route, replay, service, suite, or application semantics.

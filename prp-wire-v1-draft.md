@@ -2,15 +2,30 @@
 
 Status: Draft
 
-This document defines the peer-visible PRP v1 wire contracts that are shared
-by conforming implementations. The canonical numeric registry for profile ids,
-suite ids, frame ids, status ids, routing ids, bootstrap transport ids, and
-service ids is `wire-registry-v1.md` in this repository.
+This document defines draft peer-visible PRP v1 wire contracts for fixed and
+stream profiles. It is not the Linux adjacent opaque fastpath format. The
+canonical numeric registry for profile ids, suite ids, frame ids, status ids,
+routing ids, bootstrap transport ids, and service ids is `wire-registry-v1.md`
+in this repository.
 
 This document does not define implementation APIs, tool behavior, local
 operator storage, dataplane backend selectors, application payload semantics,
 or carrier-specific framing. Reference implementations may keep implementation
 conformance notes in their own repositories.
+
+Established Linux adjacent protected traffic intentionally exposes only:
+
+```text
+adjacency_nonce || adjacency_ciphertext || adjacency_tag
+```
+
+Route id, record kind, flags, record length, payload, route-use policy, and
+padding are authenticated inside the AEAD plaintext. Public `profile_code`,
+`suite_id`, `envelope_kind`, PDS selectors, ASCII discovery fallback, and
+fixed-datagram headers are not used by that fastpath. Clear bootstrap/control
+traffic is the exception: it starts with a public 16-byte `route_id` so a peer
+without a negotiated adjacent protected session can reach the appropriate local
+control context.
 
 ## Integer Encoding
 
