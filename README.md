@@ -1,185 +1,47 @@
-# PRP Specifications
+# PRP Official Publications
 
-This repository contains the normative architecture, whitepaper, protocol specifications, service-layer models, and related technical documents for the **Participant Relationship Protocol (PRP)**.
+This repository is the public publication channel for stable Participant
+Relationship Protocol (PRP) documents referenced by the project website. It is
+not the protocol's editorial working tree and does not accept independent
+normative development.
 
-PRP is a relationship-centric communication architecture in which communication emerges from pre-existing relationships rather than globally reachable locations.
+The canonical editorial source is the internal `prp-spec` project. Drafts,
+registries under development, conformance vectors, tests, source maps, and
+cross-project review records remain there. A document appears here only after
+an explicit publication decision.
 
-## Status
+## Published documents
 
-The current foundational architecture document is:
+| Document | Publication status | Website reference |
+| --- | --- | --- |
+| [PRP Architecture v1 RC1](prp-architecture-v1-rc1.md) | Release Candidate 1 | Architecture and PRP core roadmap |
+| [PRP Wire v1](prp-wire-v1-draft.md) | Published working draft | PRP core roadmap |
+| [PRP Encapsulation Profiles v1](prp-encapsulation-v1.md) | Published working draft | PRP core and carrier roadmap |
+| [PRP v1 Wire Registry](wire-registry-v1.md) | Published working registry | PRP core roadmap |
 
-```text
-prp-architecture-v1-rc1.md
-```
+The exact retained publication set and provenance are recorded in
+[`PUBLICATION-MANIFEST.tsv`](PUBLICATION-MANIFEST.tsv).
 
-Status:
+## Authority and change control
 
-```text
-Release Candidate 1
-```
+Publication here freezes a reviewable public artifact; it does not create a
+second editorial authority. Changes originate in `prp-spec`, pass its review
+and promotion process, and are then copied here in a dedicated publication
+commit. Git history preserves superseded publications.
 
-This document defines the architectural foundations of PRP, including its relationship-centric model, terminology, architectural principles, layers, threat assumptions, design goals, non-goals, and conformance rules.
+Implementation behavior, repository examples, and unpublished working material
+do not silently revise these documents. Status labels apply independently to
+each document.
 
-## Foundational Documents
-
-* [`prp-architecture-v1-rc1.md`](prp-architecture-v1-rc1.md)
-  Normative foundational architecture specification for PRP.
-
-* [`prp-wire-v1-draft.md`](prp-wire-v1-draft.md)
-  Draft fixed/stream PRP v1 wire contract for PRP units, transcript context,
-  suites, handshake payloads, fixed datagram units, stream records, routed
-  bootstrap, status payloads, and limits. It is not the Linux adjacent opaque
-  fastpath format, whose established protected traffic exposes only
-  `adjacency_nonce || adjacency_ciphertext || adjacency_tag`.
-
-* [`prp-encapsulation-v1.md`](prp-encapsulation-v1.md)
-  Draft carrier encapsulation profile contract for reconstructing complete PRP units over datagrams, byte streams, fragmented carriers, packet files, and IPC messages without defining relationship, identity, route, replay, service, suite, or application semantics.
-
-* [`wire-registry-v1.md`](wire-registry-v1.md)
-  Canonical v1 wire identifier registry for PRP protocol profiles, suites, frames, services, routing, bootstrap, and dataplane control vocabularies.
-
-Future foundational documents may include:
-
-```text
-whitepaper/
-protocol/
-services/
-registries/
-```
-
-## Architectural Position
-
-PRP is not an address-centric, identity-centric, routing-centric, or governance-centric communication architecture.
-
-Instead, PRP treats relationships as the primary architectural object from which communication emerges.
-
-The foundational architectural statement is:
+## Foundational statement
 
 > Communication becomes possible because a relationship already exists.
 
-In this model:
-
-* relationships are primary architectural objects;
-* continuity is more fundamental than identity;
-* routing, transport, and carrier selection are realization mechanisms;
-* governance is optional rather than foundational;
-* services extend the architecture but do not define it.
-
-## Repository Purpose
-
-This repository is the normative source for PRP architectural and protocol documentation.
-
-It is intended to answer:
-
-```text
-What is PRP?
-What belongs to the PRP core?
-What belongs above PRP as a service?
-What architectural principles should implementations preserve?
-```
-
-It is not intended to host implementation code.
-
-Reference implementations should live in separate repositories, such as:
-
-```text
-prp-protocol/libprp
-```
-
-Academic papers and preprints should live in:
-
-```text
-prp-protocol/papers
-```
-
-## Conceptual Model
-
-The current PRP architecture is organized around:
-
-```text
-Participant
-    ↓
-Relationship
-    ↓
-Continuity
-```
-
-Communication infrastructure exists to realize relationship continuity.
-
-The core architectural layers are:
-
-```text
-Relationship Layer
-Routing Layer
-Transport Layer
-Carrier Layer
-```
-
-The Service Layer exists above the core architecture and may include:
-
-```text
-Discovery
-Governance
-Evidence
-Benchmarking
-Economics
-Custody
-Advanced Routing
-Applications
-```
-
-## Core Rule
-
-A component belongs to the PRP core only if:
-
-1. it is required by every valid deployment;
-2. it cannot be implemented as a service;
-3. its absence would invalidate the relationship-centric model itself.
-
-Everything else belongs above the core as a service, extension, implementation detail, or deployment policy.
-
-## Related Repositories
-
-* Papers and preprints:
-  `https://github.com/prp-protocol/papers`
-
-* Reference implementation:
-  `https://github.com/prp-protocol/libprp`
-
-* Main project organization:
-  `https://github.com/prp-protocol`
-
-## Related Paper
-
-The architecture defined here is the normative foundation for the paper:
-
-**Relationship-Centric Communication: The Participant Relationship Protocol (PRP)**
-Gustavo Junior Alves
-
-Zenodo DOI:
-
-```text
-https://doi.org/10.5281/zenodo.20482932
-```
-
-## Suggested Citation
-
-Until a formal specification DOI is available, cite the architecture document as:
-
-```bibtex
-@misc{alves2026prparchitecture,
-  author = {Alves, Gustavo Junior},
-  title = {PRP Architecture v1: Participant Relationship Protocol},
-  year = {2026},
-  version = {Release Candidate 1},
-  url = {https://github.com/prp-protocol/specifications}
-}
-```
+PRP treats relationships as the primary communication object. Routes,
+transports, and carriers are replaceable realization mechanisms rather than
+participant identities.
 
 ## License
 
-Unless otherwise stated, documents in this repository are licensed under the **Creative Commons Attribution 4.0 International License (CC BY 4.0)**.
-
-You are free to share and adapt the material, including for commercial purposes, provided appropriate credit is given.
-
-See [`LICENSE`](LICENSE) for details.
+Unless a document states otherwise, publications are licensed under the
+[Creative Commons Attribution 4.0 International License](LICENSE).
