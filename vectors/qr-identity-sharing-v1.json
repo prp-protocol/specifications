@@ -1,0 +1,76 @@
+{
+  "status": "generic-reference-carrier-approved-not-admitted",
+  "encoding": "canonical-unpadded-base64url",
+  "classes": {
+    "0": "IDENTITY",
+    "1": "ALIAS",
+    "2": "MULTICAST",
+    "3": "GROUPCAST"
+  },
+  "cases": [
+    {
+      "name": "identity-suite-0005-no-parameters",
+      "class": 0,
+      "payload_hex": "000005000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "reference_length": 35,
+      "parameters_hex": "",
+      "uri": "prp:AAAFAAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8"
+    },
+    {
+      "name": "identity-suite-0005-five-parameter-octets",
+      "class": 0,
+      "payload_hex": "000005000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f00ff707270",
+      "reference_length": 35,
+      "parameters_hex": "00ff707270",
+      "uri": "prp:AAAFAAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8A_3BycA"
+    },
+    {
+      "name": "alias-suite-0005-no-parameters",
+      "class": 1,
+      "payload_hex": "010005000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "reference_length": 35,
+      "parameters_hex": "",
+      "uri": "prp:AQAFAAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8"
+    },
+    {
+      "name": "alias-suite-0005-five-parameter-octets",
+      "class": 1,
+      "payload_hex": "010005000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f00ff707270",
+      "reference_length": 35,
+      "parameters_hex": "00ff707270",
+      "uri": "prp:AQAFAAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8A_3BycA"
+    },
+    {
+      "name": "multicast-suite-0005-no-parameters",
+      "class": 2,
+      "payload_hex": "020005000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "reference_length": 35,
+      "parameters_hex": "",
+      "uri": "prp:AgAFAAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8"
+    },
+    {
+      "name": "multicast-suite-0005-five-parameter-octets",
+      "class": 2,
+      "payload_hex": "020005000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f00ff707270",
+      "reference_length": 35,
+      "parameters_hex": "00ff707270",
+      "uri": "prp:AgAFAAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8A_3BycA"
+    },
+    {
+      "name": "groupcast-suite-0005-no-parameters",
+      "class": 3,
+      "payload_hex": "030005000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "reference_length": 35,
+      "parameters_hex": "",
+      "uri": "prp:AwAFAAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8"
+    },
+    {
+      "name": "groupcast-suite-0005-five-parameter-octets",
+      "class": 3,
+      "payload_hex": "030005000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f00ff707270",
+      "reference_length": 35,
+      "parameters_hex": "00ff707270",
+      "uri": "prp:AwAFAAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8A_3BycA"
+    }
+  ]
+}

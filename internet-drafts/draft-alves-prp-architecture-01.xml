@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rfc category="info"
+     docName="draft-alves-prp-architecture-01"
+     ipr="trust200902"
+     submissionType="independent"
+     version="3">
+  <front>
+    <title abbrev="PRP Architecture">The Participant Relationship Protocol (PRP): A Relationship-Centric Communication Architecture</title>
+    <seriesInfo name="Internet-Draft" value="draft-alves-prp-architecture-01"/>
+    <author fullname="Gustavo Junior Alves" initials="G. J." surname="Alves">
+      <organization>GJ LABS</organization>
+      <address>
+        <email>gjalves@gjalves.com.br</email>
+      </address>
+    </author>
+    <date year="2026" month="October" day="2"/>
+    <area>General</area>
+    <keyword>relationship</keyword>
+    <keyword>communication architecture</keyword>
+    <keyword>continuity</keyword>
+    <keyword>dataplane</keyword>
+    <abstract>
+      <t>This document describes the architecture of the Participant Relationship Protocol (PRP). PRP treats a persistent participant relationship, rather than an address, route, transport connection, carrier or identity alone, as the primary context in which communication is authorized and continuity is evaluated.</t>
+      <t>PRP is a relationship-centric, carrier-independent communication architecture. It can provide a Layer-3 realization that replaces conventional addressing, but the architecture itself is not defined by an OSI layer. A relationship is not a per-packet forwarding object. Protocol implementations derive compact local session and routing state for the packet-processing path.</t>
+      <t>The document separates architectural invariants from illustrative implementation mappings, states an analytical scaling model, and defines the boundary between architectural requirements and separately versioned implementation or experimental evidence. Detailed wire formats, cryptographic suites, carrier bindings, routing codecs and registries are defined separately.</t>
+    </abstract>
+    <note removeInRFC="false">
+      <name>Independent Submission</name>
+      <t>This document is submitted through the Independent Submission Stream for informational publication. It does not represent IETF consensus and does not specify an Internet Standard.</t>
+    </note>
+  </front>
+  <middle>
+    <section anchor="introduction">
+      <name>Introduction</name>
+      <t>Addresses, routes, transport connections and carrier attachments are necessary realization mechanisms, but none alone expresses the persistent authorization and continuity context among communicating participants. Each mechanism can be replaced or become unavailable while the reason and authority for communication remain.</t>
+      <t>PRP makes that persistent relationship explicit. The relationship records the rules under which participants recognize continuity, constrain identity, authorize services and accept replacement realization mechanisms. Reachability can make an exchange technically possible, but it does not create or expand relationship authority.</t>
+      <t>The contribution is architectural rather than algorithmic. PRP does not claim novelty for cryptographic sessions, forwarding labels, multipath communication, identity/locator separation, connection migration or carrier abstraction individually. The proposed distinction is the treatment of the persistent participant relationship as the primary communication object, with addressing, routing, transport, carrier, identity constraints and governance treated as derived or replaceable realization mechanisms.</t>
+    </section>
+
+    <section anchor="requirements-language">
+      <name>Requirements Language</name>
+      <t>The key words "<bcp14>MUST</bcp14>", "<bcp14>MUST NOT</bcp14>", "<bcp14>REQUIRED</bcp14>", "<bcp14>SHALL</bcp14>", "<bcp14>SHALL NOT</bcp14>", "<bcp14>SHOULD</bcp14>", "<bcp14>SHOULD NOT</bcp14>", "<bcp14>RECOMMENDED</bcp14>", "<bcp14>NOT RECOMMENDED</bcp14>", "<bcp14>MAY</bcp14>", and "<bcp14>OPTIONAL</bcp14>" in this document are to be interpreted as described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they appear in all capitals, as shown here.</t>
+      <t><xref target="RFC2119"/> and <xref target="RFC8174"/> together constitute <xref target="BCP14"/>.</t>
+    </section>
+
+    <section anchor="scope">
+      <name>Scope</name>
+      <t>This document defines the persistent relationship model; the boundaries among relationships, identities, sessions, routing contexts, dataplane state, carrier bindings and services; architectural invariants; and requirements for claiming architectural conformance.</t>
+      <t>This document does not define packet or record layouts, cryptographic algorithms, numeric registries, session-establishment messages, routing or discovery algorithms, carrier bindings, application object models, deployment mechanisms or implementation APIs. Separate specifications can define those subjects while preserving these invariants.</t>
+    </section>
+
+    <section anchor="model">
+      <name>Foundational Model</name>
+      <t>The foundational statement of PRP is:</t>
+      <blockquote><t>Communication becomes possible because a relationship already exists.</t></blockquote>
+      <t>This is an architectural ordering, not a claim that traffic can flow without reachability. The intended cardinality is:</t>
+      <artwork><![CDATA[
+participant relationship
+        -> one or more cryptographic sessions
+           -> one or more compatible routing contexts
+]]></artwork>
+      <t>A relationship is a persistent communication and authorization context among participants. Persistence is semantic: the relationship can remain valid while no session, route or carrier is available. A cryptographic session is bounded state with its own keys, generation and replay domain. A routing context is scoped forwarding state compatible with a session. None of these objects is interchangeable.</t>
+      <t>A relationship is not a per-packet forwarding object, Layer-3 address, routing-table entry, carrier identifier or cryptographic session. Relationship parsing, policy evaluation, identity constraints, governance decisions and session establishment are control operations.</t>
+    </section>
+
+    <section anchor="architecture-implementation">
+      <name>Architecture and Implementation</name>
+      <t>The architecture defines semantic objects and invariants. An implementation realizes them as concrete state and code. An implementation can store several objects together, but it must preserve their independent authority, lifetimes and failure behavior.</t>
+      <table anchor="implementation-mapping">
+        <name>Illustrative realization mapping</name>
+        <thead><tr><th>Architectural concept</th><th>Concrete realization</th></tr></thead>
+        <tbody>
+          <tr><td>Relationship</td><td>Persistent relationship policy and continuity state</td></tr>
+          <tr><td>Continuity</td><td>Authenticated policy transitions and replacement bindings</td></tr>
+          <tr><td>Cryptographic session</td><td>Established generation-scoped session state</td></tr>
+          <tr><td>Routing context</td><td>Scoped opaque labels and route bindings</td></tr>
+          <tr><td>Forwarding</td><td>Local label lookup and next-hop/session binding</td></tr>
+          <tr><td>Carrier</td><td>Complete-unit transport adapter</td></tr>
+          <tr><td>Service</td><td>Encrypted service and multiplexing dispatch</td></tr>
+        </tbody>
+      </table>
+      <t>This table is illustrative, not an implementation API or a description of one repository revision. Implementations can use different data structures while preserving the stated boundaries.</t>
+
+      <section anchor="control-packet-path">
+        <name>Control Path and Packet Path</name>
+        <t>The control path evaluates relationship membership, identity constraints, authorization policy, governance, discovery input, session establishment and route installation. It derives a bounded forwarding entry containing only the state required by a selected profile, such as an active session context, key slot, sequence/replay state, opaque local routing label, next-hop binding and queue or backend state.</t>
+        <t>For installed state, the packet path performs a scoped local lookup, validates the applicable generation and packet protection, applies replay and sequence processing, and dispatches to a next hop or local service. It does not parse or re-evaluate the persistent relationship.</t>
+        <t>An intermediate participant is responsible for the protection applicable to its own layer and selected profile; it need not terminate or validate independent protection of opaque endpoint content. A profile can require an additional transit consistency check over that content. Such a check is packet processing and does not imply evaluation of the persistent relationship.</t>
+        <t>Intermediate forwarding participants do not evaluate endpoint relationship semantics. They process only the minimum authenticated local forwarding state required for opaque delivery. Endpoint relationship semantics remain endpoint-owned control state. This is a bounded technical property, not a claim that PRP universally resolves the end-to-end argument described in <xref target="RFC1958"/>.</t>
+        <t>Derived packet-path state can include local responsibility, custody, queue or quota bookkeeping compiled during control operations. Consulting that bookkeeping does not authorize a new participant and must not invoke identity, membership or governance evaluation.</t>
+      </section>
+    </section>
+
+    <section anchor="layering">
+      <name>Layering and Carrier Independence</name>
+      <t>PRP is not inherently a Layer-3 protocol. It can provide a Layer-3 realization that replaces conventional network-layer addressing, but it can also operate over datagram carriers, streams, IPC, virtual interfaces, intermittent media and non-IP media.</t>
+      <t>A carrier moves complete protocol units between adjacent participants. It acquires no participant identity, relationship authority or application authorization solely because it moves those units. An IP-based profile can use IP addressing and routing as carrier or compatibility mechanisms; that dependency belongs to the profile, not to the architecture.</t>
+      <t>Earlier descriptions of PRP as a Layer-3 protocol refer to one deployment mapping and must not be interpreted as the architectural definition.</t>
+    </section>
+
+    <section anchor="invariants">
+      <name>Architectural Invariants</name>
+      <ol>
+        <li>A design <bcp14>MUST</bcp14> identify the persistent relationship context whose communication it realizes.</li>
+        <li>Relationship continuity <bcp14>MUST NOT</bcp14> be defined solely by possession of a locator, route, carrier attachment or ephemeral session handle.</li>
+        <li>Relationships, identities, sessions, routing contexts, paths and carriers <bcp14>MUST</bcp14> have explicit scopes and lifetimes.</li>
+        <li>Operational routing and carrier selectors <bcp14>MUST NOT</bcp14> become implicit identity or authorization.</li>
+        <li>Every decision expanding access to a relationship or service <bcp14>MUST</bcp14> derive from relationship policy or explicitly delegated authority.</li>
+        <li>A conforming protocol suite <bcp14>MUST</bcp14> permit participants with sufficient local relationship information and a compatible carrier to communicate without consulting mandatory global naming, routing, identity, governance or ledger infrastructure.</li>
+        <li>A replacement realization <bcp14>MUST NOT</bcp14> silently reset replay, ordering, identity or authorization state while claiming continuity.</li>
+      </ol>
+    </section>
+
+    <section anchor="scaling">
+      <name>Performance and Scaling Model</name>
+      <t>Let R be the number of retained relationships, S the number of active cryptographic sessions, C the number of installed routing contexts, and P the number of processed packets in a measurement interval.</t>
+      <ul>
+        <li>Persistent policy and continuity storage scales with R.</li>
+        <li>Keys, generations and replay windows scale with S.</li>
+        <li>Forwarding labels, next-hop bindings and route generations scale with C.</li>
+        <li>Packet lookup, protection, replay, queueing and carrier work scales with P.</li>
+      </ul>
+      <t>Relationship resolution is a control-path operation and is not inherently O(P). This analytical decomposition does not claim constant-time lookup, production-scale throughput or bounded memory for an unspecified implementation.</t>
+      <t>A scale or performance result must report exact software revisions, hardware, operating system, topology, payload and packet sizes, concurrency, duration or volume, repetitions, exclusions, stationarity treatment, CPU cost, throughput or goodput, loss, reordering and cleanup. Overlapping owner-local clocks must not be summed as wall time.</t>
+
+      <section anchor="comparison-boundary">
+        <name>Comparison Boundary</name>
+        <t>Performance comparisons must begin with the same application-observable task. UDP/IP is a carrier and framing component, not an independent semantic competitor to PRP. A PRP-item-to-UDP-datagram comparison can diagnose framing, copy, carrier or path cost, but it cannot establish the cost of complete relationship-authorized communication.</t>
+        <t>This architecture does not select a mandatory comparison protocol. A comparative study must define equivalent application-visible behavior, security properties and exclusions before selecting baselines. Component-level comparisons remain valid diagnostics when they are not presented as complete architectural comparisons.</t>
+      </section>
+    </section>
+
+    <section anchor="existing-mechanisms">
+      <name>Relationship to Existing Mechanisms</name>
+      <t>Connection migration, cryptographic sessions, local forwarding labels and multipath operation all have existing precedents. HIP separates host identity from location <xref target="RFC7401"/>. LISP separates endpoint identifiers from routing locators <xref target="RFC9299"/>. QUIC supports transport connection migration <xref target="RFC9000"/>.</t>
+      <t>PRP does not replace or claim invention of those mechanisms. The architectural distinction is where persistent continuity and authorization reside. Identity, locator and session state can all be inputs to, or realizations of, a relationship without becoming the relationship itself.</t>
+    </section>
+
+    <section anchor="security">
+      <name>Security Considerations</name>
+      <t>This section separates architectural security requirements from claims that require profile-specific analysis or experimental evidence.</t>
+      <t>Relationship primacy does not itself supply confidentiality, integrity, authentication, anonymity or availability. Every protocol profile <bcp14>MUST</bcp14> specify authenticated principals and transcript scope, confidentiality and integrity properties, replay domains, authorization inputs, selector and generation scopes, key and state lifetimes, exhaustion and amplification bounds, downgrade protection, visible metadata and failure behavior.</t>
+      <t>A carrier-security claim does not imply end-to-end security. Adjacent authentication does not imply service authorization. A self-certifying identifier demonstrates a defined cryptographic commitment but does not by itself authorize a relationship or service.</t>
+      <t>Continuity state is a target for fixation, rollback, replay and confused-deputy attacks. A replacement realization <bcp14>MUST</bcp14> be bound to the relationship, participants, direction, generation and policy required by its profile. State from one scope <bcp14>MUST NOT</bcp14> be admitted into another merely because identifiers or byte lengths coincide.</t>
+      <t>Unknown or malformed security-critical values <bcp14>MUST</bcp14> fail closed unless a specification defines a safe extension rule. Loss of continuity evidence <bcp14>MUST NOT</bcp14> be repaired by treating reachability, a local handle or unauthenticated forwarding state as equivalent authority. Profiles <bcp14>MUST</bcp14> define revocation, recovery, key replacement and resource bounds.</t>
+      <t>Intermediate forwarding uses authenticated local state, but architectural conformance does not establish resistance to a state adversary, global traffic correlation, censorship or traffic confirmation. Any such claim requires a separately specified threat model and evidence.</t>
+    </section>
+
+    <section anchor="privacy">
+      <name>Privacy Considerations</name>
+      <t>Relationship-centric operation does not inherently provide anonymity, unlinkability, traffic-flow confidentiality, resistance to correlation or availability. A stable relationship context can itself become a correlation surface even when routes, addresses and session keys change.</t>
+      <t>Profiles <bcp14>MUST</bcp14> state which relationship identifiers, participant references, timing signals, path changes and service metadata are visible to carriers, intermediaries, discovery services and peers. Operational selectors should use the narrowest practical scope and lifetime.</t>
+      <t>Padding, batching, multipath, private discovery, aliases and cover traffic can reduce particular observations, but each requires separate specification and analysis. No privacy property follows merely from the absence of globally meaningful addresses or civil identities.</t>
+    </section>
+
+    <section anchor="implementation-evidence">
+      <name>Evidence Boundary</name>
+      <t>Implementations and experiments can provide evidence for particular realizations or architectural properties. Such evidence is versioned separately and does not become an architectural invariant.</t>
+      <t>An implementation result does not constrain other conforming realizations to the same data structures, mechanisms or process boundaries. Architectural conformance does not imply implementation qualification, deployment suitability or reproduction of a separately reported result.</t>
+      <t>A document making an empirical claim must identify the evaluated realization or model, inputs, environment, method, acceptance rule and evidence revision. Updating that evidence does not change this architecture unless an architectural invariant itself is revised.</t>
+    </section>
+
+    <section anchor="claim-boundaries">
+      <name>Claim Boundaries</name>
+      <t>This document defines architectural objects, boundaries and invariants. It does not define minimum throughput, latency, deployment scale, memory capacity, routing convergence or implementation economics. Architectural conformance does not establish those properties.</t>
+      <t>Performance, scalability, privacy, availability and adversarial-resistance claims are profile- and realization-specific. Such claims require separately versioned evidence identifying their configuration, environment, methodology and observed scope.</t>
+      <t>The absence of an architectural claim neither establishes nor precludes the corresponding property in a particular realization.</t>
+    </section>
+
+    <section anchor="evolution">
+      <name>Extensibility and Evolution</name>
+      <t>Extensions <bcp14>MUST</bcp14> preserve the invariants in this document. An extension that requires globally stable locators, equates routes with identity or makes optional governance a universal prerequisite is not architecturally conforming.</t>
+      <t>Protocol versions and profiles <bcp14>MUST</bcp14> define explicit selection and failure behavior. Negotiation <bcp14>MUST NOT</bcp14> silently weaken authenticated properties or reinterpret assigned values. Migration <bcp14>SHOULD</bcp14> preserve relationship continuity through an authenticated make-before-break procedure when both profiles permit it.</t>
+    </section>
+
+    <section anchor="conformance">
+      <name>Architectural Conformance</name>
+      <t>A conforming design treats a relationship as the persistent communication and authorization context; defines continuity independently of any single session, route or carrier; separates endpoint relationship semantics from derived forwarding state; states the scopes and lifetimes of its objects; and does not claim security, privacy or scale beyond its specified profiles and evidence.</t>
+      <t>Conformance to this architecture does not imply wire compatibility or conformance to a discovery, routing, carrier or service profile.</t>
+    </section>
+
+    <section anchor="iana">
+      <name>IANA Considerations</name>
+      <t>This document has no IANA actions.</t>
+    </section>
+  </middle>
+  <back>
+    <references>
+      <name>References</name>
+      <references>
+        <name>Normative References</name>
+        <reference anchor="BCP14" target="https://www.rfc-editor.org/info/bcp14"><front><title>Best Current Practice 14</title><author><organization>Internet Engineering Task Force</organization></author><date month="May" year="2017"/></front><seriesInfo name="BCP" value="14"/></reference>
+        <reference anchor="RFC2119" target="https://www.rfc-editor.org/info/rfc2119"><front><title>Key words for use in RFCs to Indicate Requirement Levels</title><author initials="S." surname="Bradner"/><date month="March" year="1997"/></front><seriesInfo name="BCP" value="14"/><seriesInfo name="RFC" value="2119"/></reference>
+        <reference anchor="RFC8174" target="https://www.rfc-editor.org/info/rfc8174"><front><title>Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words</title><author initials="B." surname="Leiba"/><date month="May" year="2017"/></front><seriesInfo name="BCP" value="14"/><seriesInfo name="RFC" value="8174"/></reference>
+      </references>
+      <references>
+        <name>Informative References</name>
+      <reference anchor="RFC1958" target="https://www.rfc-editor.org/info/rfc1958"><front><title>Architectural Principles of the Internet</title><author initials="B." surname="Carpenter"/><date month="June" year="1996"/></front><seriesInfo name="RFC" value="1958"/></reference>
+      <reference anchor="RFC7401" target="https://www.rfc-editor.org/info/rfc7401"><front><title>Host Identity Protocol Version 2 (HIPv2)</title><author initials="R." surname="Moskowitz"/><author initials="T." surname="Heer"/><author initials="P." surname="Jokela"/><author initials="T." surname="Henderson"/><date month="April" year="2015"/></front><seriesInfo name="RFC" value="7401"/></reference>
+      <reference anchor="RFC9000" target="https://www.rfc-editor.org/info/rfc9000"><front><title>QUIC: A UDP-Based Multiplexed and Secure Transport</title><author initials="J." surname="Iyengar"/><author initials="M." surname="Thomson"/><date month="May" year="2021"/></front><seriesInfo name="RFC" value="9000"/></reference>
+      <reference anchor="RFC9299" target="https://www.rfc-editor.org/info/rfc9299"><front><title>An Architectural Introduction to the Locator/ID Separation Protocol (LISP)</title><author initials="A." surname="Cabellos"/><author initials="D." surname="Saucez"/><date month="October" year="2022"/></front><seriesInfo name="RFC" value="9299"/></reference>
+      </references>
+    </references>
+    <section anchor="acknowledgments">
+      <name>Acknowledgments</name>
+      <t>The author thanks Eliot Lear for editorial feedback that motivated the explicit architecture/implementation, control/dataplane and claim boundaries in this revision. Publication remains subject to the normal Independent Stream reviews.</t>
+    </section>
+  </back>
+</rfc>

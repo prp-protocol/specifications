@@ -1,0 +1,12 @@
+{
+  "specification": "PRP Self-Certifying Identifier Reference v1 — IDENTITY",
+  "status": "working-draft",
+  "strong_id_public_key_pattern": "all-zero",
+  "cases": [
+    {"suite": 1, "strong_id_hex": "e4bd9eb22a08f3d827a967309aab01feba118c44d1a7885570159a79ec22b9f3", "scir_hex": "000001e4bd9eb22a08f3d827a967309aab01feba118c44d1a7885570159a79ec22b9f3", "uri": "prp:AAAB5L2esioI89gnqWcwmqsB_roRjETRp4hVcBWaeewiufM"},
+    {"suite": 2, "strong_id_hex": "a7f8df105f14f17c2c548004e5452da234905a442c83480b42b63a3913764e94", "scir_hex": "000002a7f8df105f14f17c2c548004e5452da234905a442c83480b42b63a3913764e94", "uri": "prp:AAACp_jfEF8U8XwsVIAE5UUtojSQWkQsg0gLQrY6ORN2TpQ"},
+    {"suite": 3, "strong_id_hex": "0b5ddea92ee507c96002c90aafd3a7d620ce2d114ff9b0d716968eaa956c5550", "scir_hex": "0000030b5ddea92ee507c96002c90aafd3a7d620ce2d114ff9b0d716968eaa956c5550", "uri": "prp:AAADC13eqS7lB8lgAskKr9On1iDOLRFP-bDXFpaOqpVsVVA"},
+    {"suite": 4, "strong_id_hex": "0bcfc9cc0dff7f6e1f6d1a7d25430768ab8b8514be8e3296831485a1d5e1dccc98ee527795a309518c3254bbbff0e9a1", "scir_hex": "0000040bcfc9cc0dff7f6e1f6d1a7d25430768ab8b8514be8e3296831485a1d5e1dccc98ee527795a309518c3254bbbff0e9a1", "uri": "prp:AAAEC8_JzA3_f24fbRp9JUMHaKuLhRS-jjKWgxSFodXh3MyY7lJ3laMJUYwyVLu_8Omh"},
+    {"suite": 5, "strong_id_hex": "544fd942e57dfea2f8d732e85b87561bbed047673ba9a5e099cf5e70024b1e4c", "scir_hex": "000005544fd942e57dfea2f8d732e85b87561bbed047673ba9a5e099cf5e70024b1e4c", "uri": "prp:AAAFVE_ZQuV9_qL41zLoW4dWG77QR2c7qaXgmc9ecAJLHkw"}
+  ]
+}

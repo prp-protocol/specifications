@@ -1,0 +1,113 @@
+{
+  "contract": "PRP Contact Identity Admission and Legacy Migration Contract",
+  "version": 1,
+  "local_max_payload_octets": 3072,
+  "public_key": {
+    "suite": 1,
+    "algorithm": "Ed25519",
+    "canonical_hex": "d75a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a",
+    "strong_id_hex": "254b5e85ea9c398900b1c6a538779b56e12bea5206fba3ed870f57df1b951e6b"
+  },
+  "carrier_cases": [
+    {
+      "name": "identity-candidate",
+      "uri": "prp:AAABJUteheqcOYkAscalOHebVuEr6lIG-6Pthw9X3xuVHms",
+      "parameters_hex": "",
+      "result": "CONTACT_CANDIDATE"
+    },
+    {
+      "name": "identity-candidate-with-opaque-parameters",
+      "uri": "prp:AAABJUteheqcOYkAscalOHebVuEr6lIG-6Pthw9X3xuVHmsBAgM",
+      "parameters_hex": "010203",
+      "result": "CONTACT_CANDIDATE"
+    },
+    {
+      "name": "alias-valid-carrier-wrong-contact-operation",
+      "uri": "prp:AQABJUteheqcOYkAscalOHebVuEr6lIG-6Pthw9X3xuVHms",
+      "result": "CONTACT_CLASS_UNSUPPORTED"
+    },
+    {
+      "name": "multicast-valid-carrier-wrong-contact-operation",
+      "uri": "prp:AgABJUteheqcOYkAscalOHebVuEr6lIG-6Pthw9X3xuVHms",
+      "result": "CONTACT_CLASS_MISMATCH"
+    },
+    {
+      "name": "groupcast-valid-carrier-wrong-contact-operation",
+      "uri": "prp:AwABJUteheqcOYkAscalOHebVuEr6lIG-6Pthw9X3xuVHms",
+      "result": "CONTACT_CLASS_MISMATCH"
+    },
+    {
+      "name": "padded",
+      "uri": "prp:AAABJUteheqcOYkAscalOHebVuEr6lIG-6Pthw9X3xuVHms=",
+      "result": "CARRIER_ALPHABET"
+    },
+    {
+      "name": "noncanonical-final-bits",
+      "uri": "prp:AAABJUteheqcOYkAscalOHebVuEr6lIG-6Pthw9X3xuVHmm",
+      "result": "CARRIER_NONCANONICAL"
+    },
+    {
+      "name": "unknown-suite",
+      "uri": "prp:AP__AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "result": "REFERENCE_SUITE_UNSUPPORTED"
+    },
+    {
+      "name": "one-octet-short-reference",
+      "uri": "prp:AAABJUteheqcOYkAscalOHebVuEr6lIG-6Pthw9X3xuVHg",
+      "result": "REFERENCE_TRUNCATED"
+    },
+    {
+      "name": "reserved-header-bit",
+      "uri": "prp:BAABJUteheqcOYkAscalOHebVuEr6lIG-6Pthw9X3xuVHms",
+      "result": "REFERENCE_RESERVED_HEADER"
+    },
+    {
+      "name": "legacy-spelling",
+      "uri": "prp:01:254b5e85ea9c398900b1c6a538779b56e12bea5206fba3ed870f57df1b951e6b",
+      "result": "LEGACY_UNSUPPORTED"
+    }
+  ],
+  "key_binding_cases": [
+    {
+      "name": "complete-public-key-recomputes-strong-id",
+      "public_key": "declared",
+      "result": "CONTACT_KEY_BOUND"
+    },
+    {
+      "name": "different-complete-public-key",
+      "public_key_hex": "d85a980182b10ab7d54bfed3c964073a0ee172f3daa62325af021a68f707511a",
+      "result": "STRONG_ID_MISMATCH"
+    },
+    {
+      "name": "strong-id-without-hs2",
+      "public_key": "declared",
+      "result": "CONTACT_KEY_BOUND_NOT_AUTHENTICATED"
+    }
+  ],
+  "legacy_cases": [
+    {
+      "name": "raw-value-only",
+      "fields": ["original_value"],
+      "result": "LEGACY_METADATA_INCOMPLETE"
+    },
+    {
+      "name": "address-profile-only",
+      "fields": ["original_value", "address_profile"],
+      "result": "LEGACY_METADATA_INCOMPLETE"
+    },
+    {
+      "name": "complete-evidence-no-approved-profile",
+      "fields": [
+        "original_value", "source_product", "source_component",
+        "source_release", "source_build", "source_commit",
+        "legacy_decoder_revision", "legacy_decoder_hash",
+        "address_profile", "address_profile_definition",
+        "legacy_identifier", "legacy_derivation", "key_algorithm",
+        "key_format", "complete_public_key", "record_key_provenance",
+        "historical_proof_operation", "storage_record_identity",
+        "storage_generation", "collision_history"
+      ],
+      "result": "MIGRATION_PROFILE_REQUIRED"
+    }
+  ]
+}

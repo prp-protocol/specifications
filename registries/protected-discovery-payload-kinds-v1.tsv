@@ -1,0 +1,13 @@
+id	name	class	sender_role	payload_format	subject_generation	correlation	status	specification
+0x01	IDENTITY_PUBLICATION	durable	publication-controller	PRPU_V1	publication-policy-generation	zero	registered	prp-protected-discovery-payload-v1
+0x02	BLOOM_MANIFEST	durable	filter-origin	PRB4_MANIFEST	filter-generation	zero	registered	prp-protected-discovery-payload-v1
+0x03	REMOTE_BLOOM_VIEW	durable	rendezvous	PRVM_V2	filter-generation	zero	registered	prp-protected-discovery-payload-v1
+0x04	BLOOM_SHARD	durable	filter-origin	PRBS_V4	filter-generation	zero	registered	prp-protected-discovery-payload-v1
+0x05	MICROSHARD_REQUEST	ephemeral	requester	PRMQ_V2	filter-generation	query-nonce	registered	prp-protected-discovery-payload-v1
+0x06	MICROSHARD_RESPONSE	ephemeral	rendezvous	PRMS_V2	filter-generation	query-nonce	registered	prp-protected-discovery-payload-v1
+0x07	VOPRF_KEY	durable	voprf-server	PRVK_V1	discovery-control-generation	zero	registered	prp-protected-discovery-payload-v1
+0x08	VOPRF_REQUEST	ephemeral	voprf-client	PRVQ_V1	discovery-control-generation	request-id	registered	prp-protected-discovery-payload-v1
+0x09	VOPRF_RESPONSE	ephemeral	voprf-server	PRVR_V1	discovery-control-generation	request-id	registered	prp-protected-discovery-payload-v1
+0x0a	EXACT_LOOKUP_QUERY	ephemeral	requester	EXACT_QUERY_V1	filter-generation	query-nonce	registered	prp-protected-discovery-payload-v1
+0x0b	DESTINATION_CHALLENGE	ephemeral	rendezvous	DESTINATION_CHALLENGE_V1	filter-generation	query-nonce	registered	prp-protected-discovery-payload-v1
+0x0c	DESTINATION_PROOF	ephemeral	published-destination	PRPP_V1	filter-generation	query-nonce	registered	prp-protected-discovery-payload-v1

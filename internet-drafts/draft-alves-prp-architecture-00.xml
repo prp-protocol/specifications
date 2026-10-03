@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude"
+     category="info"
+     docName="draft-alves-prp-architecture-00"
+     ipr="trust200902"
+     submissionType="independent"
+     version="3">
+  <front>
+    <title abbrev="PRP Architecture">The Participant Relationship Protocol (PRP): A Relationship-Centric Network Architecture</title>
+    <seriesInfo name="Internet-Draft" value="draft-alves-prp-architecture-00"/>
+    <author fullname="Gustavo Junior Alves" initials="G. J." surname="Alves">
+      <organization>GJ LABS</organization>
+      <address>
+        <email>gjalves@gjalves.com.br</email>
+      </address>
+    </author>
+    <date year="2026" month="August" day="22"/>
+    <area>General</area>
+    <keyword>relationship</keyword>
+    <keyword>identity</keyword>
+    <keyword>network architecture</keyword>
+    <keyword>continuity</keyword>
+    <abstract>
+      <t>This document describes the architecture of the Participant Relationship Protocol (PRP). PRP treats a relationship, rather than an address, route, transport connection, or identity alone, as the primary persistent context in which communication is authorized and continuity is evaluated. It separates relationships from the replaceable identities, sessions, trajectories, routes, paths, adjacencies, transports, and carriers that realize communication.</t>
+      <t>PRP is independent of IP and of any other particular network-layer protocol. IP-based and non-IP carriers are optional realizations of the same relationship-centric architecture.</t>
+      <t>The document defines terminology, architectural invariants, layering boundaries, security and privacy requirements, and criteria for evaluating relationship-centric protocol designs. It intentionally does not define a wire format, cryptographic suite, routing algorithm, carrier technology, deployment architecture, or IANA registry.</t>
+    </abstract>
+  </front>
+  <middle>
+    <section anchor="introduction">
+      <name>Introduction</name>
+      <t>Internet communication is commonly described through addresses, routes, transport state, and application endpoints. Those objects are necessary realization mechanisms, but none of them alone expresses the durable authorization and continuity context between communicating participants. Addresses can change, paths can fail, transport sessions can be rekeyed, and carrier attachments can disappear while the reason and authorization for communication remain.</t>
+      <t>PRP introduces the relationship as an explicit architectural object. A relationship records the rules under which participants recognize continuity, constrain identity, authorize communication, and replace realization mechanisms. Reachability can make communication technically possible, but it does not create or expand relationship authority.</t>
+      <t>The foundational statement of PRP is:</t>
+      <blockquote>
+        <t>Communication becomes possible because a relationship already exists.</t>
+      </blockquote>
+      <t>This is an architectural ordering rather than a claim that packets can be exchanged before reachability exists. Paths, transports, and carriers move information, while routes select scoped forwarding outcomes. The relationship determines why an exchange belongs to a continuing authorized context and which realization mechanisms are acceptable for that context.</t>
+      <t>This document is intended for protocol designers, implementers, researchers, and reviewers evaluating relationship-centric networking. It is published for informational purposes through the Independent Submission Stream and does not represent IETF consensus or specify an Internet Standard.</t>
+    </section>
+
+    <section anchor="requirements-language">
+      <name>Requirements Language</name>
+      <t>The key words <bcp14>MUST</bcp14>, <bcp14>MUST NOT</bcp14>, <bcp14>REQUIRED</bcp14>, <bcp14>SHALL</bcp14>, <bcp14>SHALL NOT</bcp14>, <bcp14>SHOULD</bcp14>, <bcp14>SHOULD NOT</bcp14>, <bcp14>RECOMMENDED</bcp14>, <bcp14>NOT RECOMMENDED</bcp14>, <bcp14>MAY</bcp14>, and <bcp14>OPTIONAL</bcp14> in this document are to be interpreted as described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they appear in all capitals, as shown here.</t>
+    </section>
+
+    <section anchor="scope">
+      <name>Scope</name>
+      <t>This document defines:</t>
+      <ul>
+        <li>the relationship-centric communication model;</li>
+        <li>the distinction among relationships, identities, sessions, trajectories, routes, paths, adjacencies, transports, and carriers;</li>
+        <li>architectural layers and dependency boundaries;</li>
+        <li>continuity, authorization, and trust invariants;</li>
+        <li>security and privacy properties that every realization must address; and</li>
+        <li>requirements for claiming architectural conformance.</li>
+      </ul>
+      <t>This document does not define packet or record layouts, cryptographic algorithms, numeric registries, session-establishment messages, routing or discovery algorithms, carrier bindings, application object models, deployment mechanisms, or administrative interfaces. Separate specifications may define those subjects provided they preserve the invariants in this document.</t>
+    </section>
+
+    <section anchor="model">
+      <name>Foundational Model</name>
+      <t>An address-centric communication sequence is often summarized as:</t>
+      <artwork><![CDATA[
+address -> route -> transport -> communication
+]]></artwork>
+      <t>PRP instead places the relationship and its continuity rules before the realization mechanisms:</t>
+      <artwork><![CDATA[
+relationship -> continuity and authorization
+                       ^
+                       |
+ trajectory / route decisions / transport / carrier
+]]></artwork>
+      <t>The relationship does not replace the lower-layer mechanisms. It supplies the persistent context against which their use, replacement, and failure are evaluated. A realization can therefore move between addresses, paths, sessions, or carriers without silently creating a new relationship, provided continuity is authenticated under relationship policy.</t>
+    </section>
+
+    <section anchor="terminology">
+      <name>Terminology</name>
+      <dl newline="true">
+        <dt>Participant:</dt>
+        <dd>An entity capable of taking part in a relationship. A participant can represent a person, process, service, device, organization, or another entity type.</dd>
+        <dt>Relationship:</dt>
+        <dd>A persistent communication and authorization context among participants. Persistence is semantic and does not require a particular storage mechanism or uninterrupted availability.</dd>
+        <dt>Continuity:</dt>
+        <dd>The ability to determine, under relationship policy, whether an interaction belongs to the same relationship across time or a change of realization mechanism.</dd>
+        <dt>Identity:</dt>
+        <dd>A representation by which a participant or service can be distinguished within a defined scope. An identity constraint is relationship policy specifying which identity properties are required, permitted, or prohibited.</dd>
+        <dt>Trust material:</dt>
+        <dd>Information used to evaluate continuity, authorization, or identity constraints. Transport reachability alone is not trust material unless relationship policy explicitly makes it so.</dd>
+        <dt>Authorization boundary:</dt>
+        <dd>The set of actions permitted within a relationship. Authentication evaluates a principal or continuity claim; authorization determines what that claim is allowed to do.</dd>
+        <dt>Session:</dt>
+        <dd>Bounded cryptographic and operational state used to exchange information within a defined scope and generation. A relationship can use multiple sessions over its lifetime.</dd>
+        <dt>Route:</dt>
+        <dd>A scoped directional forwarding decision used in the realization of a trajectory. A route selects an eligible next path, adjacency, or local-delivery outcome. It is one decision leg of a trajectory and is not the trajectory itself.</dd>
+        <dt>Trajectory:</dt>
+        <dd>A validated directional realization of reachability for a relationship. A trajectory can span multiple route decisions and contains one or more paths.</dd>
+        <dt>Path:</dt>
+        <dd>An authenticated directional opportunity to carry traffic within a trajectory.</dd>
+        <dt>Routing identifier:</dt>
+        <dd>An operational selector for local route state, interpreted within an explicit routing scope and lifetime.</dd>
+        <dt>Adjacency:</dt>
+        <dd>A context in which participants can directly exchange units through a carrier under a defined local scope. Physical proximity or carrier enumeration can create an adjacency candidate but does not establish an authenticated relationship.</dd>
+        <dt>Transport:</dt>
+        <dd>The exchange semantics used to realize a relationship, including the applicable authentication, confidentiality, integrity, replay, ordering, and reliability properties.</dd>
+        <dt>Carrier:</dt>
+        <dd>A mechanism capable of moving protocol units between adjacent participants. Carrier technology and locators are realization details.</dd>
+        <dt>Service:</dt>
+        <dd>A capability exposed within an authorization context above core relationship semantics. Discovery, governance, evaluation, storage, and application protocols can be services without becoming prerequisites of every deployment.</dd>
+        <dt>Aggregation:</dt>
+        <dd>An optional relationship-realization arrangement in which an authorized participant coordinates or intermediates multiple independently authorized relationship contexts or trajectories. Aggregation does not merge relationships, identities, continuity state, or authorization boundaries. It is distinct from packet batching, data summarization, and group identity.</dd>
+        <dt>Aggregator:</dt>
+        <dd>A participant performing aggregation under explicitly delegated relationship authority. Acting as an aggregator grants no implicit authority over endpoint identity, relationship continuity, or application authorization.</dd>
+      </dl>
+
+      <section anchor="reference-classes">
+        <name>Reference Classes</name>
+        <t>A protocol realization can distinguish several non-substitutable reference classes:</t>
+        <ul>
+          <li>A strong identifier is a self-certifying reference to one concrete entity.</li>
+          <li>A strong alias is an authenticated logical reference whose selected concrete members still prove their own strong identifiers.</li>
+          <li>A weak alias is a classification reference and is not a cryptographic identity.</li>
+          <li>A content identifier is an immutable commitment to finite content bytes and is not an entity identity.</li>
+        </ul>
+        <t>A content identifier has no private key, cannot prove possession, and does not assert an owner, author, provider, or semantic meaning. Availability of matching bytes is a separate and revocable claim. Specific encodings and algorithms for these classes are outside this architecture.</t>
+      </section>
+    </section>
+
+    <section anchor="invariants">
+      <name>Architectural Invariants</name>
+      <section anchor="relationship-primacy">
+        <name>Relationship Primacy</name>
+        <t>A conforming design <bcp14>MUST</bcp14> identify the relationship context whose communication it realizes. It <bcp14>MUST NOT</bcp14> define relationship continuity solely as continued possession of a locator, route, carrier attachment, or ephemeral session handle.</t>
+      </section>
+      <section anchor="independent-lifetimes">
+        <name>Independent Lifetimes</name>
+        <t>Relationships, identities, sessions, trajectories, routes, paths, adjacencies, and carriers have distinct lifetimes. A conforming design <bcp14>MUST</bcp14> define transitions among them without silently equating one object with another.</t>
+        <ul>
+          <li>A relationship can outlive a session, trajectory, route, path, or carrier.</li>
+          <li>A trajectory can be replaced and its route decisions can change without replacing the relationship.</li>
+          <li>A session can be rekeyed without changing participant identity.</li>
+          <li>An adjacency can exist without authorization to form a relationship.</li>
+          <li>Loss of a carrier does not by itself revoke a relationship.</li>
+        </ul>
+      </section>
+      <section anchor="local-scope">
+        <name>Local Scope</name>
+        <t>Operational selectors are local unless another authenticated scope is explicitly defined. Local selectors <bcp14>MUST NOT</bcp14> be interpreted as global addresses or identities. An intermediary can rewrite local forwarding selectors while preserving end-to-end relationship semantics.</t>
+      </section>
+      <section anchor="explicit-authority">
+        <name>Explicit Authority</name>
+        <t>Every protocol decision affecting access to a relationship or service <bcp14>MUST</bcp14> derive from relationship policy or explicitly delegated authority. Reachability, routing, discovery results, or a successful cryptographic handshake <bcp14>MUST NOT</bcp14> silently expand authorization.</t>
+      </section>
+      <section anchor="replaceable-realization">
+        <name>Replaceable Realization</name>
+        <t>A conforming design <bcp14>SHOULD</bcp14> support replacement of a failed or obsolete realization mechanism without replacing the relationship when continuity can be authenticated. When continuity cannot be authenticated, the design <bcp14>MUST</bcp14> fail or establish a new relationship according to explicit policy. It <bcp14>MUST NOT</bcp14> silently reset replay, ordering, identity, or authorization state while claiming continuity.</t>
+      </section>
+      <section anchor="no-global-infrastructure">
+        <name>No Mandatory Global Infrastructure</name>
+        <t>A conforming protocol suite <bcp14>MUST</bcp14> permit two participants possessing sufficient local relationship information and a compatible carrier to communicate without consulting a mandatory global naming, routing, identity, governance, or ledger service. A profile can depend on external services, but that dependency is a property of the profile and not a universal architectural requirement.</t>
+      </section>
+      <section anchor="network-layer-independence">
+        <name>Network-Layer Independence</name>
+        <t>The PRP architecture <bcp14>MUST NOT</bcp14> require IPv4, IPv6, or any other particular network-layer protocol as a universal prerequisite. A conforming realization can operate over any compatible carrier capable of moving protocol units between adjacent participants.</t>
+        <t>A profile <bcp14>MAY</bcp14> require IP or another network technology. That dependency is a property of the profile, not of PRP itself. When an IP-based profile is used, IP addresses and routing are scoped realization mechanisms and <bcp14>MUST NOT</bcp14> become participant identity, relationship continuity, or authorization.</t>
+      </section>
+    </section>
+
+    <section anchor="layers">
+      <name>Architectural Layers</name>
+      <ol>
+        <li>The relationship layer defines continuity, trust, authorization, and communication permissions.</li>
+        <li>The routing layer selects and maintains trajectories and the scoped route decisions that realize a relationship.</li>
+        <li>The transport layer supplies exchange semantics over those trajectories.</li>
+        <li>The carrier layer moves units between adjacent participants.</li>
+      </ol>
+      <t>Services operate above these concerns. A protocol can combine layers in one component, message, or cryptographic transcript, but it <bcp14>MUST</bcp14> retain their semantic boundaries.</t>
+      <t>A function belongs to the architectural core only when every valid deployment requires it, it cannot be supplied as an optional service, and omitting it would invalidate the relationship-centric model.</t>
+    </section>
+
+    <section anchor="operation">
+      <name>Conceptual Operation</name>
+      <t>This section is non-normative. It illustrates the distinction between a relationship and its realizations without prescribing messages or implementation components.</t>
+      <ol>
+        <li>Participants possess local policy and trust material sufficient to recognize or propose a relationship.</li>
+        <li>A carrier supplies an adjacency candidate, eligible paths are authenticated, and scoped route decisions participate in a selected trajectory.</li>
+        <li>A protocol profile authenticates the required principals and binds a session to the relationship context.</li>
+        <li>Authorized services exchange information through that session.</li>
+        <li>If a path, trajectory, carrier, or session fails, another realization can be established. The relationship continues only if its continuity rules are satisfied.</li>
+        <li>Revocation of the relationship authorization terminates its authority independently of whether old trajectories, route decisions, or sessions remain technically usable.</li>
+      </ol>
+      <t>This sequence does not require a globally resolvable participant name. A selected profile can require a self-certifying identity, a provisioned trust anchor, a pseudonymous continuity key, or another explicitly specified mechanism.</t>
+    </section>
+
+    <section anchor="use-cases">
+      <name>Illustrative Use Cases</name>
+      <t>This section is non-normative. The examples illustrate consequences of the architecture and do not prescribe protocol mechanisms or deployment models.</t>
+      <section anchor="mobility-use-case">
+        <name>Mobility across Realizations</name>
+        <t>Two participants communicate while one moves between carrier attachments and receives different locators. Paths and transport state can be replaced, but the relationship need not be recreated. The replacement is accepted only when the selected profile authenticates continuity and preserves the relationship's authorization constraints.</t>
+      </section>
+      <section anchor="intermittent-use-case">
+        <name>Intermittent Communication</name>
+        <t>Participants can retain a relationship while no valid trajectory, path, or compatible carrier is available. Later reachability supplies a new opportunity to communicate; it does not by itself restore authority. Communication resumes only after continuity is established under the relationship policy.</t>
+      </section>
+      <section anchor="pseudonymous-use-case">
+        <name>Scoped or Pseudonymous Participation</name>
+        <t>A relationship can constrain a participant to a scoped or pseudonymous identity without requiring a globally resolvable name or civil identity. The scope, acceptable identity evidence, and authorized actions remain explicit properties of that relationship. The absence of a global name does not imply anonymity or prevent correlation.</t>
+      </section>
+    </section>
+
+    <section anchor="discovery-routing-aggregation">
+      <name>Discovery, Routing, and Aggregation</name>
+      <t>Discovery produces candidates or information used to realize a relationship. It does not establish identity, trust, continuity, or authorization unless a separate authenticated procedure explicitly says so.</t>
+      <t>Routing constructs and maintains trajectories through scoped directional route decisions. A relationship can be direct or transit one or more forwarding participants. Transit does not grant an intermediary authority over endpoint identity or application authorization.</t>
+      <t>Aggregation is an optional scaling and privacy mechanism. Direct relationships remain architecturally valid. An aggregation profile <bcp14>MUST</bcp14> specify what an aggregator learns, which statements it authenticates, and which decisions remain reserved to endpoints. It <bcp14>MUST</bcp14> preserve the independent relationship, identity, continuity, and authorization boundaries defined by this architecture.</t>
+    </section>
+
+    <section anchor="existing-architecture">
+      <name>Relationship to Existing Network Architectures</name>
+      <t>PRP is independent of the Internet Protocol. It does not require IPv4, IPv6, or any other particular network-layer protocol. A PRP realization can operate over any compatible carrier capable of moving protocol units between adjacent participants.</t>
+      <t>An IP-based profile can use IP addresses, routing, and transport protocols as optional realization mechanisms. IPv6 continues to provide packet delivery as described in <xref target="RFC8200"/> when such a profile uses it. This does not make IP an architectural prerequisite, and possession of an IP address does not establish participant identity, relationship continuity, or authorization.</t>
+      <t>Transport protocols already separate some connection state from a particular path. For example, QUIC supports connection migration <xref target="RFC9000"/>. That continuity is transport-specific; PRP defines a relationship context that can outlive and authorize replacement of the complete transport session.</t>
+      <t>Other architectures separate endpoint identity from routing location. The Host Identity Protocol <xref target="RFC7401"/> introduces a host identity namespace, while the LISP architecture <xref target="RFC9299"/> separates endpoint identifiers from routing locators. PRP does not replace those mechanisms. It distinguishes both identity and locator from the relationship that determines continuity and authorization, and a PRP profile can use such mechanisms as realizations.</t>
+      <t>The architecture therefore does not claim that identity-locator separation, path migration, or authenticated sessions are new individually. Its contribution is the explicit relationship object and the invariants that prevent those replaceable mechanisms from becoming implicit sources of persistent authority.</t>
+    </section>
+
+    <section anchor="security">
+      <name>Security Considerations</name>
+      <t>Relationship primacy does not itself provide cryptographic security. Every protocol profile <bcp14>MUST</bcp14> specify authenticated principals and transcript scope, confidentiality and integrity properties, replay domains, authorization inputs, selector and generation scopes, key and state lifetimes, exhaustion and amplification bounds, downgrade protection, and failure behavior.</t>
+      <t>A carrier-security claim does not imply end-to-end security. Adjacent authentication does not imply service authorization. A self-certifying identifier demonstrates control of key material but does not establish an external civil identity or authorize arbitrary services.</t>
+      <t>Continuity creates valuable long-lived state and is therefore a target for fixation, rollback, replay, and confused-deputy attacks. A replacement realization <bcp14>MUST</bcp14> be bound to the exact relationship, participants, direction, generation, and authorization policy required by its profile. State from one scope <bcp14>MUST NOT</bcp14> be admitted into another merely because identifiers or byte lengths coincide.</t>
+      <t>Unknown or malformed security-critical values <bcp14>MUST</bcp14> fail closed unless a specification defines a safe extension rule. Loss of continuity evidence <bcp14>MUST NOT</bcp14> be repaired by silently accepting reachability, a local handle, or unauthenticated forwarding state as equivalent authority.</t>
+      <t>Persistent relationships can increase the impact of compromised trust material. Profiles must define revocation, recovery, key replacement, and the point at which continuity can no longer be safely claimed. Denial-of-service protections must bound retained state, verification work, retries, referrals, and fanout per authenticated authority.</t>
+    </section>
+
+    <section anchor="privacy">
+      <name>Privacy Considerations</name>
+      <t>Relationship-centric operation does not inherently provide anonymity, unlinkability, traffic-flow confidentiality, resistance to correlation, or availability. A stable relationship context can itself become a correlation surface even when routes, addresses, and session keys change.</t>
+      <t>Profiles <bcp14>MUST</bcp14> state which relationship identifiers, participant references, timing signals, path changes, and service metadata are visible to carriers, intermediaries, discovery services, and peers. Operational selectors should have the narrowest practical scope and lifetime. Implementations should avoid exposing durable relationship state where an ephemeral correlation is sufficient.</t>
+      <t>Padding, batching, multipath, private discovery, aliases, and cover traffic can reduce particular observations, but each requires separate analysis. No deployment should infer privacy properties merely from the absence of globally meaningful addresses or civil identities.</t>
+    </section>
+
+    <section anchor="operational">
+      <name>Operational Considerations</name>
+      <t>Relationship, trajectory, route-decision, path, session, and carrier state should be observable as distinct objects so that operators do not mistake path availability for relationship authorization. Diagnostics should identify scope and generation while avoiding disclosure of long-lived trust material or globally correlatable identifiers.</t>
+      <t>Implementations need explicit bounds for relationship state, candidate trajectories and paths, route decisions, concurrent sessions, retained replay information, and recovery attempts. Replacement should normally be make-before-break when the selected profiles can authenticate continuity, but an implementation must prefer loss of availability over an unauthorized continuity claim.</t>
+      <t>Interoperability depends on protocol profiles that instantiate this architecture. Architectural conformance alone does not imply wire compatibility.</t>
+    </section>
+
+    <section anchor="evolution">
+      <name>Extensibility and Evolution</name>
+      <t>Extensions <bcp14>MUST</bcp14> preserve the invariants in this document. An extension that requires globally stable locators, equates routes with identity, or makes optional governance a universal prerequisite is not architecturally conforming.</t>
+      <t>Protocol versions and profiles <bcp14>MUST</bcp14> define explicit selection and failure behavior. Negotiation <bcp14>MUST NOT</bcp14> silently weaken authenticated properties or reinterpret assigned values. Migration <bcp14>SHOULD</bcp14> preserve relationship continuity through an authenticated make-before-break procedure when both profiles permit it.</t>
+    </section>
+
+    <section anchor="conformance">
+      <name>Architectural Conformance</name>
+      <t>A design conforms to this architecture only if it:</t>
+      <ol>
+        <li>treats a relationship as the primary persistent communication and authorization context;</li>
+        <li>defines continuity independently of any single trajectory, route, path, session, or carrier;</li>
+        <li>keeps operational routing and carrier selectors distinct from identity;</li>
+        <li>makes authorization an explicit relationship decision;</li>
+        <li>permits direct communication without mandatory global governance;</li>
+        <li>does not make IP or another particular network-layer protocol a universal prerequisite;</li>
+        <li>states the scope and lifetime of identities, sessions, trajectories, routes, paths, and selectors; and</li>
+        <li>does not claim security or privacy properties beyond those supplied by specified profiles.</li>
+      </ol>
+      <t>Conformance to this architecture does not imply conformance to a particular wire protocol, discovery mechanism, routing protocol, carrier binding, or service profile.</t>
+    </section>
+
+    <section anchor="iana">
+      <name>IANA Considerations</name>
+      <t>This document has no IANA actions.</t>
+    </section>
+  </middle>
+  <back>
+    <references>
+      <name>Normative References</name>
+      <reference anchor="RFC2119" target="https://www.rfc-editor.org/info/rfc2119">
+        <front>
+          <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+          <author initials="S." surname="Bradner" fullname="Scott Bradner"/>
+          <date month="March" year="1997"/>
+        </front>
+        <seriesInfo name="BCP" value="14"/>
+        <seriesInfo name="RFC" value="2119"/>
+        <seriesInfo name="DOI" value="10.17487/RFC2119"/>
+      </reference>
+      <reference anchor="RFC8174" target="https://www.rfc-editor.org/info/rfc8174">
+        <front>
+          <title>Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words</title>
+          <author initials="B." surname="Leiba" fullname="Barry Leiba"/>
+          <date month="May" year="2017"/>
+        </front>
+        <seriesInfo name="BCP" value="14"/>
+        <seriesInfo name="RFC" value="8174"/>
+        <seriesInfo name="DOI" value="10.17487/RFC8174"/>
+      </reference>
+    </references>
+    <references>
+      <name>Informative References</name>
+      <reference anchor="RFC7401" target="https://www.rfc-editor.org/info/rfc7401">
+        <front>
+          <title>Host Identity Protocol Version 2 (HIPv2)</title>
+          <author initials="R." surname="Moskowitz" fullname="Robert Moskowitz"/>
+          <author initials="T." surname="Heer" fullname="Tobias Heer"/>
+          <author initials="P." surname="Jokela" fullname="Petri Jokela"/>
+          <author initials="T." surname="Henderson" fullname="Thomas Henderson"/>
+          <date month="April" year="2015"/>
+        </front>
+        <seriesInfo name="RFC" value="7401"/>
+        <seriesInfo name="DOI" value="10.17487/RFC7401"/>
+      </reference>
+      <reference anchor="RFC8200" target="https://www.rfc-editor.org/info/rfc8200">
+        <front>
+          <title>Internet Protocol, Version 6 (IPv6) Specification</title>
+          <author initials="S." surname="Deering" fullname="Stephen Deering"/>
+          <author initials="R." surname="Hinden" fullname="Robert Hinden"/>
+          <date month="July" year="2017"/>
+        </front>
+        <seriesInfo name="STD" value="86"/>
+        <seriesInfo name="RFC" value="8200"/>
+        <seriesInfo name="DOI" value="10.17487/RFC8200"/>
+      </reference>
+      <reference anchor="RFC9000" target="https://www.rfc-editor.org/info/rfc9000">
+        <front>
+          <title>QUIC: A UDP-Based Multiplexed and Secure Transport</title>
+          <author initials="J." surname="Iyengar" fullname="Jana Iyengar"/>
+          <author initials="M." surname="Thomson" fullname="Martin Thomson"/>
+          <date month="May" year="2021"/>
+        </front>
+        <seriesInfo name="RFC" value="9000"/>
+        <seriesInfo name="DOI" value="10.17487/RFC9000"/>
+      </reference>
+      <reference anchor="RFC9299" target="https://www.rfc-editor.org/info/rfc9299">
+        <front>
+          <title>An Architectural Introduction to the Locator/ID Separation Protocol (LISP)</title>
+          <author initials="A." surname="Cabellos" fullname="Albert Cabellos"/>
+          <author initials="D." surname="Saucez" fullname="Damien Saucez"/>
+          <date month="October" year="2022"/>
+        </front>
+        <seriesInfo name="RFC" value="9299"/>
+        <seriesInfo name="DOI" value="10.17487/RFC9299"/>
+      </reference>
+    </references>
+    <section anchor="acknowledgments">
+      <name>Acknowledgments</name>
+      <t>The author thanks the contributors and implementers whose independent protocol work exposed the architectural distinctions documented here. Specific reviewers will be acknowledged in subsequent revisions.</t>
+    </section>
+  </back>
+</rfc>

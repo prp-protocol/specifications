@@ -1,0 +1,81 @@
+PRP DNS RRTYPE application -- REVISION10 DRAFT FOR AUTHOR REVIEW, NOT SENT
+
+Current RDATA: one complete explicit typed PRP reference. Headers00/01/02/03
+identify IDENTITY/ALIAS/MULTICAST/GROUPCAST. An RRset can contain multiple
+unordered references. Approved carrier design, not class-protocol admission or
+submission approval.
+Final presentation/external review and the stable common envelope remain gates.
+A-J answers retain the RFC 6895 Appendix A structure; date is not a submission.
+
+A. Date of submission: TBD after author approval.
+B.1 Request: new RRTYPE.
+B.2 Category: data RR.
+C. Public submitter details:
+   Gustavo Junior Alves; GJ LABS; gjalves@gjalves.com.br.
+   Telephone: +55 19 98259-2222. Other contact: none supplied.
+D. Purpose:
+   Associate a DNS name with one or more typed PRP references independently of
+   machine location or IP addressing. References can identify a principal,
+   discovery alias, multicast or groupcast. DNS authenticates publication but
+   grants no class-specific authority. No reverse mapping.
+E. Definition:
+   Proposed specification: specifications/prp-dns-reference-rr-v1.md, revision 10.
+   Normative dependency: the canonical reference envelope, four class codes and
+   closed suite-to-identifier-length table reproduced in the proposal. The DNS
+   format treats every identifier as opaque. Class-specific formation,
+   authority and lifecycle specifications are not required to implement DNS
+   storage, presentation or unknown-RR forwarding.
+   DNS class IN; ordinary data RR. RDATA is the complete canonical reference:
+   header(u8), reference suite(u16 network order), exact suite-sized identifier.
+   Header bits1..0 encode class; bits7..2 MUST be zero. Complete valid headers
+   are IDENTITY=0x00, ALIAS=0x01, MULTICAST=0x02 and GROUPCAST=0x03. Reference
+   class differs from DNS class IN.
+   Current lengths35/51. No version, identifier-length or representative field.
+   Presentation: decimal reference class, decimal suite, hexadecimal identifier;
+   class is decimal0..3. No class-less or version-prefixed fallback.
+   No compression, names, addresses, optional fields or additional processing.
+   An RRset MAY contain multiple distinct references. Identical duplicates add
+   no reference. DNS order expresses no priority, preference, fallback or
+   rotation; applications select only a requested supported class under explicit
+   policy. No server-specific cardinality enforcement is required.
+   RRset changes prove no migration, delegation or equivalence. Still-valid
+   cached bindings may remain usable. DNS changes do not revoke identities,
+   groups, streams, relationships or sessions and do not override independent pins.
+   DNSSEC is not a latest-version proof; replay and serve-stale limitations are
+   explicit. DNAME synthesis and wildcard expansion follow DNSSEC validation.
+F. Alternatives:
+   TXT can carry conventions; URI can express URI discovery. A dedicated RR
+   is requested for a typed binary reference association without locator or
+   priority semantics. HIP has protocol-specific identifiers/key formats and
+   cannot use PRP suite values without changing its meaning. A/AAAA locate IP
+   endpoints rather than PRP participants. See proposal section 6.
+G. Preferred mnemonic: PRP. Numeric code: assigned by IANA, no preference.
+H. Registry dependencies:
+   Uses the canonical PRP class map and closed reference-suite length set, not
+   DNSSEC algorithm numbers. These values are defined directly in the proposed
+   RR specification. Class-specific PRP documents govern use after selection
+   but do not alter the DNS RDATA grammar. This working draft is not wire
+   admission. No new IANA subregistry is requested.
+   REG-001 is separate PRP governance work, not an automatic DNS submission gate.
+I. Unknown-type handling:
+   Compatible with RFC 3597. No special server/resolver processing required.
+   Type-aware presentation and application consumption are needed for use.
+J. Additional information:
+   Proposal only; no DNS deployment/interoperability claim or reverse namespace.
+   Consumer security requires a validated DNS association or independent pins,
+   plus the selected class's authority evidence. No dependency of PRP itself on
+   DNS or IP. Scope/RDATA approved; final submission approval, external
+   DNS/security review and attachment/reference rights remain pending. No
+   successor HS2 or group protocol admission follows. This request is separate
+   from architecture draft -00.
+   The author has authorized CC BY 4.0 for this specification and author-owned
+   preparation; see DOCUMENT-RIGHTS.md. This is not final submission approval.
+
+After review only:
+To: dns-rrtype-applications@ietf.org
+Subject: RRTYPE allocation request: PRP reference association
+Review package entry point: iana/REVISAO-PRP-DNS.md. It identifies the exact
+reference-suite/class baselines and attachment/reference boundaries. At approved
+submission, fill the actual date and attach the approved description and
+permitted references in accordance with Appendix A. No email or registry
+request has been sent; this copy does not authorize one.

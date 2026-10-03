@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rfc category="std"
+     docName="draft-alves-prp-uri-00"
+     ipr="trust200902"
+     submissionType="IETF"
+     consensus="true"
+     version="3">
+  <front>
+    <title abbrev="PRP URI">URI and QR Code Representations of PRP References</title>
+    <seriesInfo name="Internet-Draft" value="draft-alves-prp-uri-00"/>
+    <author fullname="Gustavo Junior Alves" initials="G. J." surname="Alves">
+      <organization>GJ LABS</organization>
+      <address><email>gjalves@gjalves.com.br</email></address>
+    </author>
+    <date year="2026" month="September" day="22"/>
+    <area>Applications and Real-Time</area>
+    <keyword>URI</keyword><keyword>QR Code</keyword><keyword>reference</keyword>
+    <abstract>
+      <t>This document defines equivalent textual and binary carriers for a PRP
+      reference followed by optional opaque application parameters. The textual
+      form is the prp URI scheme with canonical unpadded base64url. The binary
+      form is the same decoded payload without a textual prefix and is suitable
+      for QR Code byte mode.</t>
+      <t>The carrier supports IDENTITY, ALIAS, MULTICAST and GROUPCAST
+      references. It identifies a logical PRP object rather than a machine or
+      network address and grants no authority merely by transporting it.</t>
+    </abstract>
+  </front>
+  <middle>
+    <section anchor="introduction"><name>Introduction</name>
+      <t>Reference sharing needs a compact binary representation for byte-oriented
+      transports and a canonical textual representation for URI-only systems.
+      Both forms defined here carry the same payload and preserve any application
+      parameter octets exactly.</t>
+      <t>Social contact sharing is one use, but it does not define this carrier.
+      Any service can consume a shared reference. Public profile or service data
+      can be obtained through the applicable authenticated protocol and need not
+      be duplicated in the carrier.</t>
+    </section>
+    <section anchor="requirements-language"><name>Requirements Language</name>
+      <t>The key words <bcp14>MUST</bcp14>, <bcp14>MUST NOT</bcp14>,
+      <bcp14>SHOULD</bcp14>, <bcp14>SHOULD NOT</bcp14>, and <bcp14>MAY</bcp14>
+      in this document are to be interpreted as described in BCP 14
+      <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when,
+      they appear in all capitals.</t>
+    </section>
+    <section anchor="payload"><name>Common Binary Payload</name>
+      <t>Both carriers encode one complete PRP reference followed by an optional
+      application-owned byte string:</t>
+      <sourcecode type="text"><![CDATA[
+P = reference || application_parameters
+
+reference = reference_header:u8 ||
+            reference_suite:u16be ||
+            identifier:L
+]]></sourcecode>
+      <t>The reference header values are 0x00 IDENTITY, 0x01 ALIAS, 0x02
+      MULTICAST and 0x03 GROUPCAST. Bits 7 through 2 are reserved and
+      <bcp14>MUST</bcp14> be zero. The recognized class/suite pair fixes L. The
+      initial suites 0x0001, 0x0002, 0x0003 and 0x0005 use L=32; suite 0x0004
+      uses L=48. A parser <bcp14>MUST NOT</bcp14> infer L from remaining bytes.
+      Unknown or unsupported class/suite pairs fail closed.</t>
+      <t>All four forms are PRP Self-Certifying Identifier References (SCIRs)
+      defined by <xref target="I-D.alves-prp-scir"/>. Each class has distinct
+      certifying material and does not inherit IDENTITY possession semantics.
+      Every octet after the exact
+      reference boundary is an opaque application parameter sequence, which can
+      be empty. Parameters are not part of the reference and gain no authenticity
+      or authority by proximity to it.</t>
+    </section>
+    <section anchor="binary"><name>Binary Representation</name>
+      <t>The binary representation is exactly P without a prefix, character
+      encoding, outer version, or length field. In a QR Code it is placed in byte
+      mode. Its first octet is the reference header, not the ASCII letter “p”.</t>
+      <t>A byte-oriented API <bcp14>MUST NOT</bcp14> decode the binary form as
+      text or apply character-set conversion. An application that accepts both
+      forms must know whether its scanner or transport returned bytes or text.</t>
+    </section>
+    <section anchor="uri"><name>Textual URI Representation</name>
+      <t>The textual form is:</t>
+      <sourcecode type="abnf"><![CDATA[
+prp-uri         = "prp:" encoded-payload
+encoded-payload = 1*( ALPHA / DIGIT / "-" / "_" )
+]]></sourcecode>
+      <t>ALPHA and DIGIT are defined by <xref target="RFC5234"/>. The
+      encoded-payload is the canonical unpadded base64url representation of P as
+      defined in Section 5 of <xref target="RFC4648"/>.</t>
+      <t>URI scheme matching is case-insensitive under <xref target="RFC3986"/>.
+      Producers <bcp14>MUST</bcp14> emit lowercase “prp:”. The encoded payload is
+      case-sensitive. Padding, whitespace, ordinary base64 characters, authority,
+      query, fragment, and relative forms are not defined and
+      <bcp14>MUST</bcp14> be rejected.</t>
+      <t>An operating-system dispatch facility can match scheme strings more
+      narrowly than the generic URI syntax. Direct parser acceptance of an
+      uppercase scheme therefore does not prove platform dispatch. Producers
+      use lowercase “prp:” for both canonical representation and dispatch
+      interoperability; platform behavior requires separate validation.</t>
+      <t>A decoder <bcp14>MUST</bcp14> reject an encoded length congruent to one
+      modulo four, nonzero unused final bits, and every noncanonical spelling. It
+      can add padding internally for a base64url primitive but
+      <bcp14>MUST</bcp14> reject “=” in the external form and verify equality with
+      a canonical re-encoding.</t>
+      <t>The experimental spelling “prp:HH:&lt;hex&gt;”, including
+      “prp:01:&lt;hex&gt;”, is not part of this scheme and
+      <bcp14>MUST NOT</bcp14> be accepted through fallback or format guessing.</t>
+    </section>
+    <section anchor="processing"><name>Processing and Equivalence</name>
+      <ol>
+        <li>distinguish binary input from a textual prp URI;</li>
+        <li>recover P exactly, decoding base64url once for the URI form;</li>
+        <li>parse and validate one complete reference using its assigned class
+        and suite;</li>
+        <li>deliver the exact remaining octets to the selected application; and</li>
+        <li>apply the authority and resolution rules of that reference class.</li>
+      </ol>
+      <t>Canonical equality of complete carrier values is equality of P. Reference
+      equality compares only the parsed reference. Two values with the same
+      reference and different application parameters identify the same PRP object while
+      remaining different complete carrier values.</t>
+      <t>The safe default action for URI invocation is parsing and presentation.
+      Invocation alone <bcp14>MUST NOT</bcp14> accept a contact, establish a
+      session, publish information, grant authority, or perform another
+      consequential action.</t>
+    </section>
+    <section anchor="qr"><name>QR Code Mapping</name>
+      <t>The binary form is encoded in QR Code byte mode. The textual URI is also
+      encoded in byte mode because the base64url alphabet is not confined to the
+      QR alphanumeric alphabet. A PRP QR profile uses error-correction level H
+      and includes a four-module quiet zone.</t>
+      <t>A QR profile <bcp14>MUST</bcp14> define a maximum presentation square,
+      integral pixels per module, media and camera classes, distance, angle,
+      focus, illumination, damage conditions, trial count, and scan-success
+      threshold. It then selects the largest empirically qualified QR version.
+      Resolution alone is not readability evidence.</t>
+      <t>Let C be the qualified byte-mode capacity at level H and R the complete
+      reference length for the recognized class/suite pair. The binary parameter
+      budget is C - R. For the textual form, the
+      greatest decoded payload length is floor(3 * (C - 4) / 4), and the
+      parameter budget is:</t>
+      <sourcecode type="text"><![CDATA[
+floor(3 * (C - 4) / 4) - R
+]]></sourcecode>
+      <t>A common-domain profile should use the textual budget for both forms so
+      that every admitted payload fits either representation at the same QR
+      version. This document does not assign a universal QR version or byte
+      maximum; those values require the empirical profile.</t>
+    </section>
+    <section anchor="limits"><name>Input Limits</name>
+      <t>Implementations <bcp14>MUST</bcp14> enforce a documented finite input
+      bound before decoding or allocating a decoded buffer, and a finite decoded
+      payload bound before parsing or copying parameters. A URI implementation
+      limit is local policy unless a consuming profile defines a smaller
+      interoperable maximum.
+      QR profiles necessarily impose their qualified capacity. A producer
+      <bcp14>MUST NOT</bcp14> claim protocol-wide QR readability from theoretical
+      symbology capacity alone.</t>
+    </section>
+    <section anchor="security"><name>Security Considerations</name>
+      <ul>
+        <li>A valid carrier does not authenticate its publisher or prove that a
+        displayed reference is the one intended by a user.</li>
+        <li>An attacker can replace an entire QR Code with another valid value.</li>
+        <li>Applications must validate opaque parameters in their own context.</li>
+        <li>Stable references permit correlation across applications and time.</li>
+        <li>Private keys, session secrets, and private profile data must not be
+        placed in either representation.</li>
+        <li>Parsers must reject noncanonical encodings, bound allocation, and
+        avoid repeated decoding or implicit character conversion.</li>
+      </ul>
+    </section>
+    <section anchor="iana"><name>IANA Considerations</name>
+      <t>IANA is requested to register the “prp” scheme in the URI Schemes
+      registry. During Internet-Draft development the author can request a
+      Provisional registration under <xref target="RFC7595"/>. Publication on
+      the Standards Track requests transition to Permanent status with the IETF
+      as change controller.</t>
+      <dl newline="true">
+        <dt>Scheme name:</dt><dd>prp</dd>
+        <dt>Status:</dt><dd>Permanent upon Standards Track publication</dd>
+        <dt>Applications/protocols:</dt><dd>PRP reference sharing and
+        inter-application transfer</dd>
+        <dt>Contact:</dt><dd>Gustavo Junior Alves, gjalves@gjalves.com.br</dd>
+        <dt>Change controller:</dt><dd>IETF</dd>
+        <dt>Reference:</dt><dd>This document</dd>
+      </dl>
+    </section>
+  </middle>
+  <back>
+    <references><name>Normative References</name>
+      <reference anchor="RFC2119" target="https://www.rfc-editor.org/info/rfc2119"><front><title>Key words for use in RFCs to Indicate Requirement Levels</title><author initials="S." surname="Bradner"/><date month="March" year="1997"/></front><seriesInfo name="BCP" value="14"/><seriesInfo name="RFC" value="2119"/></reference>
+      <reference anchor="RFC8174" target="https://www.rfc-editor.org/info/rfc8174"><front><title>Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words</title><author initials="B." surname="Leiba"/><date month="May" year="2017"/></front><seriesInfo name="BCP" value="14"/><seriesInfo name="RFC" value="8174"/></reference>
+      <reference anchor="RFC3986" target="https://www.rfc-editor.org/info/rfc3986"><front><title>Uniform Resource Identifier (URI): Generic Syntax</title><author initials="T." surname="Berners-Lee"/><author initials="R." surname="Fielding"/><author initials="L." surname="Masinter"/><date month="January" year="2005"/></front><seriesInfo name="STD" value="66"/><seriesInfo name="RFC" value="3986"/></reference>
+      <reference anchor="RFC4648" target="https://www.rfc-editor.org/info/rfc4648"><front><title>The Base16, Base32, and Base64 Data Encodings</title><author initials="S." surname="Josefsson"/><date month="October" year="2006"/></front><seriesInfo name="RFC" value="4648"/></reference>
+      <reference anchor="RFC5234" target="https://www.rfc-editor.org/info/rfc5234"><front><title>Augmented BNF for Syntax Specifications: ABNF</title><author initials="D." surname="Crocker"/><author initials="P." surname="Overell"/><date month="January" year="2008"/></front><seriesInfo name="STD" value="68"/><seriesInfo name="RFC" value="5234"/></reference>
+      <reference anchor="RFC7595" target="https://www.rfc-editor.org/info/rfc7595"><front><title>Guidelines and Registration Procedures for URI Schemes</title><author initials="D." surname="Thaler"/><author initials="T." surname="Hansen"/><author initials="T." surname="Hardie"/><date month="June" year="2015"/></front><seriesInfo name="BCP" value="35"/><seriesInfo name="RFC" value="7595"/></reference>
+      <reference anchor="I-D.alves-prp-scir"><front><title>PRP Self-Certifying Identifier Reference (SCIR)</title><author initials="G. J." surname="Alves"/><date month="September" year="2026"/></front><seriesInfo name="Internet-Draft" value="draft-alves-prp-scir-00"/></reference>
+    </references>
+    <section anchor="vectors"><name>Exact Carrier Vectors</name>
+      <t>These vectors use illustrative suite 0x0005 references whose 32-octet
+      identifier is the sequence 00 through 1f. They test carrier conversion and
+      class dispatch only and assert no class-specific authority proof.</t>
+      <sourcecode type="text"><![CDATA[
+IDENTITY without parameters (35 octets):
+000005
+000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
+
+URI:
+prp:AAAFAAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8
+
+IDENTITY with parameters 00 ff 70 72 70 (40 octets):
+000005
+000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
+00ff707270
+
+URI:
+prp:AAAFAAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8A_3BycA
+
+ALIAS without parameters:
+010005
+000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
+prp:AQAFAAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8
+ALIAS with parameters 00 ff 70 72 70:
+010005
+000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
+00ff707270
+prp:AQAFAAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8A_3BycA
+
+MULTICAST without parameters:
+020005
+000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
+prp:AgAFAAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8
+MULTICAST with parameters 00 ff 70 72 70:
+020005
+000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
+00ff707270
+prp:AgAFAAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8A_3BycA
+
+GROUPCAST without parameters:
+030005
+000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
+prp:AwAFAAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8
+GROUPCAST with parameters 00 ff 70 72 70:
+030005
+000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f
+00ff707270
+prp:AwAFAAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8A_3BycA
+]]></sourcecode>
+    </section>
+  </back>
+</rfc>

@@ -1,0 +1,326 @@
+{
+  "files": [
+    {
+      "path": "CONTRIBUTING.md",
+      "sha256": "0c165a3ab653a79106bfd96ec34d61fa777a5ffd915d2090e1ab462c6d65bac7",
+      "size": 4884,
+      "source": "CONTRIBUTING.md"
+    },
+    {
+      "path": "DOCUMENT-RIGHTS.md",
+      "sha256": "35223e62a233149aca2c03aea121fcb31157525636317ff3085c8dce3f3d34bd",
+      "size": 3742,
+      "source": "DOCUMENT-RIGHTS.md"
+    },
+    {
+      "path": "iana/PRP-RRTYPE-APPLICATION.txt",
+      "sha256": "bb3b44d76d77ec938f7419c1944293892569c239c922b380564012b76dce8ecf",
+      "size": 5127,
+      "source": "iana/PRP-RRTYPE-APPLICATION.txt"
+    },
+    {
+      "path": "iana/PRP-URI-SCHEME-APPLICATION.md",
+      "sha256": "eceea1215d35ed78ef46433f441acf9b2f9cde6deb3a0acfa533f22004b85699",
+      "size": 6520,
+      "source": "iana/PRP-URI-SCHEME-APPLICATION.md"
+    },
+    {
+      "path": "iana/REVISAO-PRP-DNS.md",
+      "sha256": "c0cafdd760b8b803de793d9f121923c21fe6cffa336510cfa11a9ea152d601e9",
+      "size": 5443,
+      "source": "iana/REVISAO-PRP-DNS.md"
+    },
+    {
+      "path": "internet-drafts/draft-alves-prp-architecture-00.xml",
+      "sha256": "b1030067004f515f4aca67ba487205897971ddc8358f90be10c68959ab371076",
+      "size": 31887,
+      "source": "internet-drafts/draft-alves-prp-architecture-00.xml"
+    },
+    {
+      "path": "internet-drafts/draft-alves-prp-architecture-01.xml",
+      "sha256": "4f3ec3c3a5bbf07c8bd3644c2f13f190a2d2545d319ba1d2517d16c6a4852b4f",
+      "size": 23667,
+      "source": "internet-drafts/draft-alves-prp-architecture-01.xml"
+    },
+    {
+      "path": "internet-drafts/draft-alves-prp-dns-reference-rr-00.xml",
+      "sha256": "95a6c7b8e18cfbd58d8a52ea928666348fdfac7ab221fd4b7335ee2262d1c18a",
+      "size": 16200,
+      "source": "internet-drafts/draft-alves-prp-dns-reference-rr-00.xml"
+    },
+    {
+      "path": "internet-drafts/draft-alves-prp-scir-00.xml",
+      "sha256": "4f4b325cdea855dbb081cf71b330a4a00583d9c29ae8347d7440ae68d7747b4d",
+      "size": 27381,
+      "source": "internet-drafts/draft-alves-prp-scir-00.xml"
+    },
+    {
+      "path": "internet-drafts/draft-alves-prp-uri-00.xml",
+      "sha256": "c24c6df14c4988ea955bab01cb589f8883d78b3819375b486506f96d2cc2556e",
+      "size": 15092,
+      "source": "internet-drafts/draft-alves-prp-uri-00.xml"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "636d5b96b93dd9d8e1d19321fff8f9a76ba5c58a95115affe4895b411986c99e",
+      "size": 766,
+      "source": "publication/github/LICENSE"
+    },
+    {
+      "path": "MIRROR-POLICY.md",
+      "sha256": "e54db8577267cd101e855f8435ab714b16ca5967f6e8f892b6042bb0b21342b9",
+      "size": 1701,
+      "source": "publication/github/MIRROR-POLICY.md"
+    },
+    {
+      "path": "README.md",
+      "sha256": "c9b8070a335608a5cc68e022d96de61801a6ee2a20288df5dcf9dd4690c7f79b",
+      "size": 2407,
+      "source": "publication/github/README.md"
+    },
+    {
+      "path": "registries/README.md",
+      "sha256": "93373d77963560a7d00658bd06ea9052fcd3050636b2f93f133c54762f106f26",
+      "size": 2308,
+      "source": "registries/README.md"
+    },
+    {
+      "path": "registries/application-agreements-v1.tsv",
+      "sha256": "7654ff7203e3630b14dcda22456f77d625735031781932eff29758e5b81dcd88",
+      "size": 213,
+      "source": "registries/application-agreements-v1.tsv"
+    },
+    {
+      "path": "registries/connection-control-kinds-v1.tsv",
+      "sha256": "0a790e85b71f3cc56dbb69c3f61e88eb474d16fe358d3ceaff57a5f2abc260eb",
+      "size": 449,
+      "source": "registries/connection-control-kinds-v1.tsv"
+    },
+    {
+      "path": "registries/content-suites-v1.tsv",
+      "sha256": "3d59aef94b6c5e5ee685c0efd2a41b62079e5a3db8570f5d841d29d8bd7391c8",
+      "size": 408,
+      "source": "registries/content-suites-v1.tsv"
+    },
+    {
+      "path": "registries/discovery-target-kinds-v1.tsv",
+      "sha256": "c43056f458ea5cf286bab7bd413acf782cab02fffa15bad0a7c92561c3b32b33",
+      "size": 408,
+      "source": "registries/discovery-target-kinds-v1.tsv"
+    },
+    {
+      "path": "registries/identity-suites-v4.tsv",
+      "sha256": "8f32b1bc77b97656b397045f93ecf32dce6c0eb8d4fd752d2246724ef2ea1aa8",
+      "size": 524,
+      "source": "registries/identity-suites-v4.tsv"
+    },
+    {
+      "path": "registries/manifest.sha256",
+      "sha256": "4c8784220d1d5a8b7391a12c371b67e5c325df0a9d6fa16bc29da348e73fcb70",
+      "size": 625,
+      "source": "registries/manifest.sha256"
+    },
+    {
+      "path": "registries/protected-discovery-payload-kinds-v1.tsv",
+      "sha256": "91ae16b82ef76ffcaa976cbc8630a25fdc93d578d726af361d0944f981831b2b",
+      "size": 1677,
+      "source": "registries/protected-discovery-payload-kinds-v1.tsv"
+    },
+    {
+      "path": "registries/relation-sections-v1.tsv",
+      "sha256": "459ca434eef31e19ebd18588aa986602a9e5e6c7062f99766554aa5984c8ff8b",
+      "size": 914,
+      "source": "registries/relation-sections-v1.tsv"
+    },
+    {
+      "path": "registries/session-suites-v4.tsv",
+      "sha256": "1b689a9c594d7a769f9a1a7e99f69bc8868b6cb6f6461832d2cd2bbe71dd3f09",
+      "size": 928,
+      "source": "registries/session-suites-v4.tsv"
+    },
+    {
+      "path": "specifications/prp-application-agreement-v1.md",
+      "sha256": "b0e905a9b6912f94417f6032e098146b321d576b5799bf29976516330ea5c521",
+      "size": 12506,
+      "source": "specifications/prp-application-agreement-v1.md"
+    },
+    {
+      "path": "specifications/prp-architecture.md",
+      "sha256": "f8ca851e7c02456ab63ea1bfb8474f4ea4ade887cf371bdb6798718f9151546c",
+      "size": 28497,
+      "source": "specifications/prp-architecture.md"
+    },
+    {
+      "path": "specifications/prp-bootstrap-reachability-v1.md",
+      "sha256": "5bbf07276cce41ee4838eb14c7c90b077a46ec7b6ee6fb87b7f1e82aba435483",
+      "size": 12554,
+      "source": "specifications/prp-bootstrap-reachability-v1.md"
+    },
+    {
+      "path": "specifications/prp-contact-identity-admission-v1.md",
+      "sha256": "95119fed65175dab8540096c7c9f8bc0cf4a28d227d7b5fd852290960192bf5a",
+      "size": 9985,
+      "source": "specifications/prp-contact-identity-admission-v1.md"
+    },
+    {
+      "path": "specifications/prp-content-identity-v1.md",
+      "sha256": "915adebf355b7fb4d653eae123ccc0b7344c3cf8c065d901a9f1f9580fc1e87e",
+      "size": 10758,
+      "source": "specifications/prp-content-identity-v1.md"
+    },
+    {
+      "path": "specifications/prp-directional-carrier-v1.md",
+      "sha256": "e82c1d119dbca2568c0efee1164d7568c4efc8aa3799fbc0ebe9af3e2de95e8c",
+      "size": 10040,
+      "source": "specifications/prp-directional-carrier-v1.md"
+    },
+    {
+      "path": "specifications/prp-discovery-architecture-v1.md",
+      "sha256": "46503dbc7f7b89a67edddb22e71bba59fcb7452c91c2b17871c910a6f9ec4eb5",
+      "size": 12061,
+      "source": "specifications/prp-discovery-architecture-v1.md"
+    },
+    {
+      "path": "specifications/prp-discovery-policy-v1.md",
+      "sha256": "09e6435b576d1a88b743f3b60be451c88a32f0c93df42a03cb0e7825f1df6187",
+      "size": 4366,
+      "source": "specifications/prp-discovery-policy-v1.md"
+    },
+    {
+      "path": "specifications/prp-dns-reference-rr-v1.md",
+      "sha256": "4db25c91f4548a9dba1468a418af173446bf1cfe03dabe07fc55b6a7e1c90d0b",
+      "size": 20040,
+      "source": "specifications/prp-dns-reference-rr-v1.md"
+    },
+    {
+      "path": "specifications/prp-exact-discovery-v1.md",
+      "sha256": "c4402741991772830dfbd024d28dbf2257b4c1ecacfd5c6ea63ba3e4931ff02e",
+      "size": 16983,
+      "source": "specifications/prp-exact-discovery-v1.md"
+    },
+    {
+      "path": "specifications/prp-hs2-successor-v1-admission.md",
+      "sha256": "ccf7fd54c2c4270cfed6fa09309b736945ec2bf8202f170b442ff4d8fa7035ec",
+      "size": 11589,
+      "source": "specifications/prp-hs2-successor-v1-admission.md"
+    },
+    {
+      "path": "specifications/prp-identity-publication-v1.md",
+      "sha256": "cc3cbf16dbb980e9f741954a651675ebc8033de8be335ddc590806a5738db77b",
+      "size": 7719,
+      "source": "specifications/prp-identity-publication-v1.md"
+    },
+    {
+      "path": "specifications/prp-member-route-intent-v1.md",
+      "sha256": "4d46b2c33846b1f00ab7ed1106f1d1c6b1e348239fd0284d49bb3fce758cb8c7",
+      "size": 11212,
+      "source": "specifications/prp-member-route-intent-v1.md"
+    },
+    {
+      "path": "specifications/prp-multicast-groupcast-v1.md",
+      "sha256": "29a425758de9c685967a1da7e5f0254dfabad475132f51281384f102f066a011",
+      "size": 18496,
+      "source": "specifications/prp-multicast-groupcast-v1.md"
+    },
+    {
+      "path": "specifications/prp-protected-discovery-lane-v1.md",
+      "sha256": "1da7c3d1272d28ede1e5d9910f1b69b7cc3444762eb23bfe6b56d02858e4b4c9",
+      "size": 4101,
+      "source": "specifications/prp-protected-discovery-lane-v1.md"
+    },
+    {
+      "path": "specifications/prp-protected-discovery-payload-v1.md",
+      "sha256": "4d55a3da61fbaf15740bf8ce7a52d72eb6983f7f373bf7c3665fa744e0dcc035",
+      "size": 9773,
+      "source": "specifications/prp-protected-discovery-payload-v1.md"
+    },
+    {
+      "path": "specifications/prp-reference-representation-v2.md",
+      "sha256": "65097e273dce1cd55d79e316f784f33cd3f9d05a05fc5e32de6834ce51a98589",
+      "size": 29651,
+      "source": "specifications/prp-reference-representation-v2.md"
+    },
+    {
+      "path": "specifications/prp-relationship-lifecycle-v1.md",
+      "sha256": "c70855abd18a4b1b31fa8594b5970f8253a81b833713389cddc37558a94f0549",
+      "size": 28345,
+      "source": "specifications/prp-relationship-lifecycle-v1.md"
+    },
+    {
+      "path": "specifications/prp-relationship-retention-v1.md",
+      "sha256": "db8da50879811c6e03b5b2c0f377fc7efe696725a84cefaf28a11556d9d20320",
+      "size": 14272,
+      "source": "specifications/prp-relationship-retention-v1.md"
+    },
+    {
+      "path": "specifications/prp-resource-report-v1.md",
+      "sha256": "6432ce27d79c36c8451996dab0859c6e0e3739bc02fd31e3d7f3bf5bc5636900",
+      "size": 21690,
+      "source": "specifications/prp-resource-report-v1.md"
+    },
+    {
+      "path": "specifications/prp-self-certifying-identity-reference-v1.md",
+      "sha256": "afc9068c5333205c4e496ae493d54ded3c1b4fe5211298b8d16469cc5b91e7a5",
+      "size": 17726,
+      "source": "specifications/prp-self-certifying-identity-reference-v1.md"
+    },
+    {
+      "path": "specifications/prp-sharded-bloom-v4.md",
+      "sha256": "dbe915592302b4da707de7be10df74c8973b96027dfdde991d514fa8de97f01d",
+      "size": 17777,
+      "source": "specifications/prp-sharded-bloom-v4.md"
+    },
+    {
+      "path": "specifications/prp-wire-v4.md",
+      "sha256": "b8594af0c48898b53474556863684db17e32ec5481769488a766b8ab13b7f42f",
+      "size": 30920,
+      "source": "specifications/prp-wire-v4.md"
+    },
+    {
+      "path": "vectors/README.md",
+      "sha256": "1b6c6e4c8cdac465e480b19d394ce797c81500f59fdc207f2a9e908d8e8d0d8f",
+      "size": 4520,
+      "source": "vectors/README.md"
+    },
+    {
+      "path": "vectors/contact-identity-admission-v1.json",
+      "sha256": "5b721046203fddd30a75fb835448068cabfb341672d753ab521d0fe872d0a650",
+      "size": 3737,
+      "source": "vectors/contact-identity-admission-v1.json"
+    },
+    {
+      "path": "vectors/dns-reference-rev9.json",
+      "sha256": "125c1dfbb872b285b3df64423c20b782b70eeaf2054381d330859c5fb7708c32",
+      "size": 1891,
+      "source": "vectors/dns-reference-rev9.json"
+    },
+    {
+      "path": "vectors/dns-reference-v1.json",
+      "sha256": "100418af989fbb27533f6311f693392ee366b2edafc44a6ba875d3d2656c1171",
+      "size": 825,
+      "source": "vectors/dns-reference-v1.json"
+    },
+    {
+      "path": "vectors/qr-identity-sharing-v1.json",
+      "sha256": "7a52a4ebab4f077550fe47ea8d50591e860f52b482f6ec9790d3348a0423ac9c",
+      "size": 2785,
+      "source": "vectors/qr-identity-sharing-v1.json"
+    },
+    {
+      "path": "vectors/self-certifying-alias-reference-v1.json",
+      "sha256": "8deb493989f5760ecd226650f2c8c4f1477a6da7eabaea69b02b517bb2b9d582",
+      "size": 1447,
+      "source": "vectors/self-certifying-alias-reference-v1.json"
+    },
+    {
+      "path": "vectors/self-certifying-identity-reference-v1.json",
+      "sha256": "24153fd8bee2b0a5d65431316a8953ec219ebc5cd56456f258b33aa5120a287a",
+      "size": 1514,
+      "source": "vectors/self-certifying-identity-reference-v1.json"
+    }
+  ],
+  "format": "prp-public-specifications-mirror-v1",
+  "source_repository": "prp-spec",
+  "source_revision": "aba4f258098ae186c7fb66b453f5490ff60285bd",
+  "target_repository": "https://github.com/prp-protocol/specifications"
+}

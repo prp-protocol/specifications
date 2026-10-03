@@ -1,0 +1,19 @@
+{
+  "specification": "PRP Self-Certifying Identifier Reference v1 — ALIAS",
+  "alias_text": "rideshare:airport:gru",
+  "canonical_utf8_hex": "7269646573686172653a616972706f72743a677275",
+  "cases": [
+    {"suite": 1, "identifier_hex": "f707b9ee960688f1bd6c7fa86c42af5903b02b59a235c3e790d5afd816e38c5f", "scir_hex": "010001f707b9ee960688f1bd6c7fa86c42af5903b02b59a235c3e790d5afd816e38c5f"},
+    {"suite": 2, "identifier_hex": "77ec917054b59809fd8238e5cc3404df50977481810d2b921d76ea79356fdb3e", "scir_hex": "01000277ec917054b59809fd8238e5cc3404df50977481810d2b921d76ea79356fdb3e"},
+    {"suite": 3, "identifier_hex": "708c3876c5bea8bbf429713a2a087763c5577a7861384b8a5c45948283556354", "scir_hex": "010003708c3876c5bea8bbf429713a2a087763c5577a7861384b8a5c45948283556354"},
+    {"suite": 4, "identifier_hex": "91cd1ad89f8663ab457051e82ba5e4ef56210266747b3ce4e3688a0ed97d30f6d0e61ce541899fff7648367a63ee2b9e", "scir_hex": "01000491cd1ad89f8663ab457051e82ba5e4ef56210266747b3ce4e3688a0ed97d30f6d0e61ce541899fff7648367a63ee2b9e"},
+    {"suite": 5, "identifier_hex": "2d9b890511a8fa88bb49c781817e7827ab2e4ff9385b863682819652065234b3", "scir_hex": "0100052d9b890511a8fa88bb49c781817e7827ab2e4ff9385b863682819652065234b3"}
+  ],
+  "nfc_equivalence": {
+    "composed": "Café",
+    "decomposed": "Café",
+    "canonical_utf8_hex": "436166c3a9",
+    "suite": 1,
+    "scir_hex": "010001ed82909bdbb8feb6ab7073ce4cb811f16297e6711897ea8f773b598c328a2656"
+  }
+}

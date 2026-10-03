@@ -1,0 +1,19 @@
+{
+  "status": "design-approved-not-wire-admitted",
+  "scope": "synthetic four-class framing only; no authority, DNSSEC or session proof",
+  "identifier32_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+  "identifier48_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f",
+  "classes": [
+    {"code": 0, "name": "IDENTITY"},
+    {"code": 1, "name": "ALIAS"},
+    {"code": 2, "name": "MULTICAST"},
+    {"code": 3, "name": "GROUPCAST"}
+  ],
+  "suites": [
+    {"suite": 1, "identifier_bytes": 32, "rdlength": 35},
+    {"suite": 2, "identifier_bytes": 32, "rdlength": 35},
+    {"suite": 3, "identifier_bytes": 32, "rdlength": 35},
+    {"suite": 4, "identifier_bytes": 48, "rdlength": 51},
+    {"suite": 5, "identifier_bytes": 32, "rdlength": 35}
+  ]
+}

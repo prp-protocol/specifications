@@ -1,47 +1,54 @@
-# PRP Official Publications
+# Participant Relationship Protocol specifications
 
-This repository is the public publication channel for stable Participant
-Relationship Protocol (PRP) documents referenced by the project website. It is
-not the protocol's editorial working tree and does not accept independent
-normative development.
+This repository is the public, filtered mirror of the normative and
+proposed-normative documents maintained by the Participant Relationship
+Protocol (PRP) specification project.
 
-The canonical editorial source is the internal `prp-spec` project. Drafts,
-registries under development, conformance vectors, tests, source maps, and
-cross-project review records remain there. A document appears here only after
-an explicit publication decision.
-
-## Published documents
-
-| Document | Publication status | Website reference |
-| --- | --- | --- |
-| [PRP Architecture v1 RC1](prp-architecture-v1-rc1.md) | Release Candidate 1 | Architecture and PRP core roadmap |
-| [PRP Wire v1](prp-wire-v1-draft.md) | Published working draft | PRP core roadmap |
-| [PRP Encapsulation Profiles v1](prp-encapsulation-v1.md) | Published working draft | PRP core and carrier roadmap |
-| [PRP v1 Wire Registry](wire-registry-v1.md) | Published working registry | PRP core roadmap |
-
-The exact retained publication set and provenance are recorded in
-[`PUBLICATION-MANIFEST.tsv`](PUBLICATION-MANIFEST.tsv).
-
-## Authority and change control
-
-Publication here freezes a reviewable public artifact; it does not create a
-second editorial authority. Changes originate in `prp-spec`, pass its review
-and promotion process, and are then copied here in a dedicated publication
-commit. Git history preserves superseded publications.
-
-Implementation behavior, repository examples, and unpublished working material
-do not silently revise these documents. Status labels apply independently to
-each document.
-
-## Foundational statement
+PRP is a relationship-centric, carrier-independent communication architecture.
+Its foundational statement is:
 
 > Communication becomes possible because a relationship already exists.
 
-PRP treats relationships as the primary communication object. Routes,
-transports, and carriers are replaceable realization mechanisms rather than
-participant identities.
+## Status
+
+Documents in this mirror have different maturity levels. Unless a document
+states otherwise, it is a **Working Draft**: publication here invites review
+and implementation feedback, but does not mean IETF publication, IANA
+registration, protocol assignment, deployment approval or implementation
+conformance.
+
+The status declared inside each document is authoritative for that document.
+The generated `MIRROR-MANIFEST.json` binds every mirrored path to an exact
+source revision, size and SHA-256 digest.
+
+## Current document families
+
+* `specifications/` — architecture, wire protocol and focused normative
+  specifications;
+* `internet-drafts/` — current RFCXML sources and rendered Internet-Draft
+  candidates, including Architecture, SCIR, URI/QR and DNS;
+* `registries/` — closed or versioned protocol registries;
+* `vectors/` — public conformance vectors;
+* `iana/` — draft registration and review material; and
+* `DOCUMENT-RIGHTS.md` — contribution, reuse and IPR boundaries.
+
+The PRP Self-Certifying Identifier Reference (SCIR) envelope has four classes:
+`IDENTITY`, `ALIAS`, `MULTICAST` and `GROUPCAST`. The generic textual carrier
+uses lowercase `prp:` plus canonical unpadded base64url; contact admission is a
+separate, narrower operation that requires an `IDENTITY` SCIR and cryptographic
+proof. Older `prp:01:<hex>` examples are not the current generic carrier.
+
+## Mirror boundary
+
+This mirror intentionally excludes internal coordination records, working
+directories, private evidence, implementation artifacts and repository-local
+review reports. Its history is preserved as normal Git history, but the
+current tree is generated from the exact source revision named in the manifest.
+
+Project overview: <https://prp-protocol.org/>
 
 ## License
 
-Unless a document states otherwise, publications are licensed under the
-[Creative Commons Attribution 4.0 International License](LICENSE).
+Author-owned material selected by the mirror policy is available under the
+Creative Commons Attribution 4.0 International license, subject to the precise
+scope and third-party boundaries in `DOCUMENT-RIGHTS.md`.

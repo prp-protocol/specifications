@@ -1,0 +1,5 @@
+id	name	identifier_profile_namespace	result_policy	proof_semantics	status
+0x01	STRONG_ID	identity-suite	single	self-certifying-identity	registered
+0x02	STRONG_ALIAS	alias-profile	single-or-declaration-bounded	concrete-member-identity	registered
+0x03	WEAK_ALIAS	alias-profile	multi-result-v1	concrete-declarer-identity	registered
+0x04	CONTENT_ID	content-suite	multi-result-v1	prcd-and-merkle-proof	registered

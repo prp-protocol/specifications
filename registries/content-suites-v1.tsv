@@ -1,0 +1,6 @@
+content_suite	name	hash	digest_len	identity_suite_registry	content_profile	status
+0x0001	ED25519-BLAKE3-256	BLAKE3	32	0x0001	0x0001	registered
+0x0002	ED25519CTX-SHA256-256	SHA-256	32	0x0002	0x0001	registered
+0x0003	MLDSA65-SHA256-256	SHA-256	32	0x0003	0x0001	registered
+0x0004	MLDSA87-SHA384-384	SHA-384	48	0x0004	0x0001	registered
+0x0005	ED25519-BLAKE3-MLDSA87-BLAKE3-256	BLAKE3	32	0x0005	0x0001	registered

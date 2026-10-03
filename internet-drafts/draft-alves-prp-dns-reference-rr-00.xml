@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rfc category="std"
+     docName="draft-alves-prp-dns-reference-rr-00"
+     ipr="trust200902"
+     submissionType="IETF"
+     consensus="true"
+     version="3">
+  <front>
+    <title abbrev="PRP DNS Reference RR">A DNS Resource Record for PRP References</title>
+    <seriesInfo name="Internet-Draft" value="draft-alves-prp-dns-reference-rr-00"/>
+    <author fullname="Gustavo Junior Alves" initials="G. J." surname="Alves">
+      <organization>GJ LABS</organization>
+      <address><email>gjalves@gjalves.com.br</email></address>
+    </author>
+    <date year="2026" month="September" day="21"/>
+    <area>Internet</area>
+    <keyword>DNS</keyword><keyword>reference</keyword><keyword>PRP</keyword>
+    <abstract>
+      <t>This document specifies the PRP DNS resource record, which associates a
+      DNS owner name with one or more typed PRP references. Each RDATA contains
+      exactly one IDENTITY, ALIAS, MULTICAST, or GROUPCAST reference rather than
+      an IP address, host locator, service priority, public key, or authority
+      proof.</t>
+      <t>The record is optional integration. PRP operation does not depend on
+      DNS, and DNS publication does not replace the class-specific authentication
+      or authorization required to use a reference.</t>
+    </abstract>
+  </front>
+  <middle>
+    <section anchor="introduction"><name>Introduction</name>
+      <t>An operator can need to publish a PRP identity, discovery alias, logical
+      multicast, or governed groupcast for a DNS name without publishing a
+      machine address. This document defines a data RRTYPE whose RDATA is exactly
+      one canonical PRP reference.</t>
+      <t>The association is directional: a DNS owner name names references
+      selected by the publisher. DNS publication does not prove possession,
+      membership, control, administration, participation, or application
+      authorization, and does not make the DNS server or hosting machine the
+      referenced peer.</t>
+    </section>
+    <section anchor="requirements-language"><name>Requirements Language</name>
+      <t>The key words <bcp14>MUST</bcp14>, <bcp14>MUST NOT</bcp14>,
+      <bcp14>SHOULD</bcp14>, <bcp14>SHOULD NOT</bcp14>, and <bcp14>MAY</bcp14>
+      in this document are to be interpreted as described in BCP 14
+      <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when,
+      they appear in all capitals.</t>
+    </section>
+    <section anchor="scope"><name>Scope</name>
+      <t>The proposed mnemonic is PRP. The numeric RRTYPE is assigned by IANA.
+      It is an ordinary data RR and defines no new DNS class, opcode, label,
+      reverse tree, underscored name, or additional-section processing.</t>
+      <t>This profile accepts the four defined PRP reference classes: IDENTITY,
+      ALIAS, MULTICAST, and GROUPCAST. Content references, machine locators,
+      authority proofs, representative keys, genesis records, administration
+      events, and application parameters are outside the RDATA format.</t>
+      <t>This document specifies the DNS carrier, not how identifiers are formed
+      or how authority over a referenced object is established. Those semantics
+      belong to the applicable PRP class and suite specifications. They can
+      evolve without changing this RRTYPE while the reference envelope, class
+      code, suite number, and suite-defined identifier length remain unchanged.</t>
+    </section>
+    <section anchor="rdata"><name>RDATA Wire Format</name>
+      <t>The RDATA is exactly one canonical binary PRP reference:</t>
+      <table><name>PRP RDATA</name><thead><tr><th>Offset</th><th>Size</th><th>Field</th></tr></thead>
+        <tbody>
+          <tr><td>0</td><td>1 octet</td><td>reference_header, 0x00 through 0x03</td></tr>
+          <tr><td>1</td><td>2 octets</td><td>reference_suite, unsigned network order</td></tr>
+          <tr><td>3</td><td>suite-defined</td><td>identifier</td></tr>
+        </tbody></table>
+      <t>Bits 1 through 0 of reference_header encode the reference class and bits
+      7 through 2 are reserved and zero. Header values 0x00, 0x01, 0x02, and 0x03 designate IDENTITY, ALIAS,
+      MULTICAST, and GROUPCAST respectively; all other values have nonzero
+      reserved bits and <bcp14>MUST</bcp14> be rejected. RDLENGTH equals 35 or 51
+      for the closed initial suite set. A consumer <bcp14>MUST</bcp14> reject an
+      unassigned suite or a length that is not exact for that suite. No compression
+      pointer or DNS name occurs in RDATA. Canonical DNSSEC processing leaves
+      these octets unchanged.</t>
+      <t>All four classes denote PRP Self-Certifying Identifier References
+      (SCIRs), as described in <xref target="I-D.alves-prp-scir"/>. Each class
+      has distinct certifying material and validation rules and does not inherit
+      IDENTITY possession semantics. For DNS processing, every identifier is an
+      opaque octet string of the exact suite-defined length. DNS storage supplies
+      no class-specific authority.</t>
+      <table><name>Closed initial reference-suite lengths</name><thead><tr><th>Suite</th><th>Identifier octets</th><th>RDLENGTH</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>32</td><td>35</td></tr>
+          <tr><td>2</td><td>32</td><td>35</td></tr>
+          <tr><td>3</td><td>32</td><td>35</td></tr>
+          <tr><td>4</td><td>48</td><td>51</td></tr>
+          <tr><td>5</td><td>32</td><td>35</td></tr>
+        </tbody></table>
+      <t>The suite number and class both participate in reference equality.
+      Equal lengths do not make classes or suites interchangeable. An unknown
+      suite is unsupported by a PRP-aware consumer and length alone
+      <bcp14>MUST NOT</bcp14> select one. This document does not create a DNS
+      subregistry for PRP classes or suites.</t>
+      <t>Authoritative servers and resolvers that do not understand the assigned
+      type can store and forward it under the unknown-RR rules in
+      <xref target="RFC3597"/>.</t>
+    </section>
+    <section anchor="presentation"><name>Presentation Format</name>
+      <t>The type-specific presentation consists of three whitespace-separated
+      tokens:</t>
+      <sourcecode type="text"><![CDATA[
+reference-class  reference-suite  identifier-hex
+]]></sourcecode>
+      <t>reference-class is one of the decimal integers 0, 1, 2, or 3 and
+      reference-suite is an unsigned decimal integer from 1 through 65535,
+      without a sign or leading zero. identifier-hex contains
+      exactly two hexadecimal digits per identifier octet, without a prefix or
+      separator. Input hexadecimal is case-insensitive; canonical output uses
+      lowercase. The suite determines the required number of digits.</t>
+      <t>For implementations without type-specific support, the generic
+      presentation in <xref target="RFC3597"/> remains valid. It is not a second
+      PRP-specific encoding.</t>
+      <t>The following synthetic records illustrate the four classes. The
+      identifier octets are examples only and establish no authority:</t>
+      <sourcecode type="text"><![CDATA[
+identity.example. 300 IN PRP (
+  0 5
+  000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f )
+alias.example. 300 IN PRP (
+  1 5
+  000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f )
+stream.example. 300 IN PRP (
+  2 5
+  000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f )
+group.example. 300 IN PRP (
+  3 5
+  000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f )
+]]></sourcecode>
+    </section>
+    <section anchor="rrset"><name>RRset Semantics</name>
+      <t>A PRP RRset <bcp14>MAY</bcp14> contain multiple distinct references.
+      Identical duplicate RDATA values do not add another reference. RRset order
+      <bcp14>MUST NOT</bcp14> express priority, preference, fallback, or rotation.
+      An application selects supported references of its requested class under
+      its own policy. Failure to authenticate or authorize one reference
+      <bcp14>MUST NOT</bcp14> silently downgrade to another class or weaker suite.</t>
+      <t>Adding or removing a DNS reference does not prove migration, delegation,
+      equivalence, or an ordered transition. A still-valid cached RRset can remain
+      usable until its DNS validity expires. DNS replacement, deletion, or TTL
+      expiry <bcp14>MUST NOT</bcp14> by itself terminate or re-identify an
+      established identity, multicast, groupcast, relationship, or session.</t>
+      <t>CNAME, DNAME, wildcard synthesis, delegation, truncation, TCP retry,
+      negative caching, and ordinary TTL behavior retain their existing DNS
+      semantics. This document defines no special server behavior.</t>
+      <t>A PRP-aware consumer <bcp14>MUST</bcp14> validate every RDATA in the
+      complete RRset before selecting a reference. A malformed known-suite RDATA
+      fails the association lookup; it <bcp14>MUST NOT</bcp14> be silently omitted
+      to construct a different partial RRset.</t>
+    </section>
+    <section anchor="validation"><name>Consumer Validation</name>
+      <t>When DNS is the authority for the name-to-reference association, the
+      consumer <bcp14>MUST</bcp14> obtain a Secure DNSSEC validation result and a
+      trusted validation path as specified by <xref target="RFC4033"/> and
+      <xref target="RFC4035"/>. Bogus or Indeterminate results fail. Insecure DNS
+      is not an authenticated reference binding.</t>
+      <t>An independently trusted reference or identity pin can instead restrict DNS output to
+      untrusted discovery hints. DNS <bcp14>MUST NOT</bcp14> replace, broaden, or
+      update such a pin without the pin's separately authorized update
+      mechanism.</t>
+      <t>DNSSEC authenticates the publisher's DNS assertion; it does not prove
+      civil identity, possession, membership, control, administration,
+      participation, application authorization, or that an answer is the newest
+      publication. After selection, the consumer <bcp14>MUST</bcp14> apply the
+      authority and validation rules of the selected PRP class and suite. Those
+      rules are deliberately outside this DNS carrier specification.</t>
+      <t>An implementation without admitted semantics for a class
+      <bcp14>MUST</bcp14> treat that reference as unsupported rather than coerce it
+      to another class or infer authority from DNS publication.</t>
+    </section>
+    <section anchor="operational"><name>Operational Considerations</name>
+      <t>Operators should publish only references intentionally made discoverable.
+      Stable references and query names permit correlation. GROUPCAST and
+      MULTICAST names can expose social structure or communication purpose.
+      DNSSEC does not provide query confidentiality. Operators should select TTLs
+      and signing-validity periods consistent with replacement policy.</t>
+      <t>Serve-stale behavior can extend availability of old data but does not
+      establish that a reference remains authorized for new operations. A
+      relying application requiring freshness must define and enforce its own
+      acceptable DNS evidence horizon. See <xref target="RFC8767"/>.</t>
+    </section>
+    <section anchor="security"><name>Security Considerations</name>
+      <ul>
+        <li>Unsigned or insecure DNS can substitute an attacker reference.</li>
+        <li>A DNSSEC-valid response can still be stale within applicable DNS and
+        signature-validity rules.</li>
+        <li>Class-specific authority proof does not prove the DNS-name association;
+        applications requiring both must validate both.</li>
+        <li>Multiple references have no DNS order or preference; applications
+        must select by requested class and explicit policy.</li>
+        <li>DNS changes do not revoke established identity, multicast, groupcast,
+        relationship, or session authority and do not override independent pins.</li>
+      </ul>
+    </section>
+    <section anchor="iana"><name>IANA Considerations</name>
+      <t>IANA is requested to allocate a new data RRTYPE from the Expert Review
+      range of the DNS Parameters registry, with mnemonic PRP and reference to
+      this document, following <xref target="RFC6895"/>.</t>
+      <table><name>Requested DNS parameter</name><thead><tr><th>Type</th><th>Value</th><th>Meaning</th><th>Reference</th></tr></thead>
+        <tbody><tr><td>PRP</td><td>TBD</td><td>PRP reference association</td><td>This document</td></tr></tbody></table>
+      <t>The application requests no DNS class, opcode, EDNS option, algorithm
+      number, or subsidiary IANA registry.</t>
+    </section>
+  </middle>
+  <back>
+    <references><name>Normative References</name>
+      <reference anchor="RFC2119" target="https://www.rfc-editor.org/info/rfc2119"><front><title>Key words for use in RFCs to Indicate Requirement Levels</title><author initials="S." surname="Bradner"/><date month="March" year="1997"/></front><seriesInfo name="BCP" value="14"/><seriesInfo name="RFC" value="2119"/></reference>
+      <reference anchor="RFC8174" target="https://www.rfc-editor.org/info/rfc8174"><front><title>Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words</title><author initials="B." surname="Leiba"/><date month="May" year="2017"/></front><seriesInfo name="BCP" value="14"/><seriesInfo name="RFC" value="8174"/></reference>
+      <reference anchor="RFC3597" target="https://www.rfc-editor.org/info/rfc3597"><front><title>Handling of Unknown DNS Resource Record (RR) Types</title><author initials="A." surname="Gustafsson"/><date month="September" year="2003"/></front><seriesInfo name="RFC" value="3597"/></reference>
+      <reference anchor="RFC4033" target="https://www.rfc-editor.org/info/rfc4033"><front><title>DNS Security Introduction and Requirements</title><author initials="R." surname="Arends"/><author initials="R." surname="Austein"/><author initials="M." surname="Larson"/><author initials="D." surname="Massey"/><author initials="S." surname="Rose"/><date month="March" year="2005"/></front><seriesInfo name="RFC" value="4033"/></reference>
+      <reference anchor="RFC4035" target="https://www.rfc-editor.org/info/rfc4035"><front><title>Protocol Modifications for the DNS Security Extensions</title><author initials="R." surname="Arends"/><author initials="R." surname="Austein"/><author initials="M." surname="Larson"/><author initials="D." surname="Massey"/><author initials="S." surname="Rose"/><date month="March" year="2005"/></front><seriesInfo name="RFC" value="4035"/></reference>
+      <reference anchor="RFC6895" target="https://www.rfc-editor.org/info/rfc6895"><front><title>Domain Name System (DNS) IANA Considerations</title><author initials="D." surname="Eastlake"/><date month="April" year="2013"/></front><seriesInfo name="BCP" value="42"/><seriesInfo name="RFC" value="6895"/></reference>
+    </references>
+    <references><name>Informative References</name>
+      <reference anchor="RFC8767" target="https://www.rfc-editor.org/info/rfc8767"><front><title>Serving Stale Data to Improve DNS Resiliency</title><author initials="D." surname="Lawrence"/><author initials="W." surname="Kumari"/><author initials="P." surname="Sood"/><date month="March" year="2020"/></front><seriesInfo name="RFC" value="8767"/></reference>
+      <reference anchor="I-D.alves-prp-scir"><front><title>PRP Self-Certifying Identifier Reference (SCIR)</title><author initials="G. J." surname="Alves"/><date month="September" year="2026"/></front><seriesInfo name="Internet-Draft" value="draft-alves-prp-scir-00"/></reference>
+    </references>
+    <section anchor="rrtype-application"><name>RRTYPE Application Summary</name>
+      <t>The public submitter is Gustavo Junior Alves, GJ LABS,
+      gjalves@gjalves.com.br. The request is a new data RRTYPE associating a DNS
+      name with one or more typed PRP references. The preferred
+      mnemonic is PRP and no numeric value is requested. The format is compatible
+      with unknown-type handling under RFC 3597. TXT, URI, HIP, A, and AAAA do not
+      supply the same typed binary reference association without adding different
+      semantics.</t>
+    </section>
+  </back>
+</rfc>

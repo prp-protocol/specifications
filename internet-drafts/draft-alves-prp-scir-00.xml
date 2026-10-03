@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude"
+     category="std"
+     docName="draft-alves-prp-scir-00"
+     ipr="trust200902"
+     submissionType="IETF"
+     consensus="true"
+     version="3">
+  <front>
+    <title abbrev="PRP SCIR">PRP Self-Certifying Identifier Reference (SCIR)</title>
+    <seriesInfo name="Internet-Draft" value="draft-alves-prp-scir-00"/>
+    <author fullname="Gustavo Junior Alves" initials="G. J." surname="Alves">
+      <organization>GJ LABS</organization>
+      <address>
+        <email>gjalves@gjalves.com.br</email>
+      </address>
+    </author>
+    <date year="2026" month="September" day="21"/>
+    <area>Security</area>
+    <keyword>identity</keyword>
+    <keyword>self-certifying identifier</keyword>
+    <keyword>cryptographic agility</keyword>
+    <keyword>PRP</keyword>
+    <abstract>
+      <t>This document defines the PRP Self-Certifying Identifier Reference
+      (SCIR), a compact typed reference for an IDENTITY, ALIAS, MULTICAST, or
+      GROUPCAST. A SCIR contains a reference class, a closed initial suite value,
+      and a suite-sized cryptographic commitment to class-specific immutable
+      certifying material. It is an identifier rather than a machine address,
+      locator, session, credential, or authorization.</t>
+      <t>The document defines the canonical representation, the five initial
+      suites, IDENTITY and ALIAS formation, class separation, rejection
+      behavior, and deterministic formation vectors. URI, QR Code, DNS, and
+      protocol-specific proof carriers are specified separately.</t>
+    </abstract>
+  </front>
+  <middle>
+    <section anchor="introduction">
+      <name>Introduction</name>
+      <t>Applications need stable typed references independently of the machine,
+      address, route, transport connection, or representative currently serving
+      them. The PRP Self-Certifying Identifier Reference (SCIR) provides one
+      envelope for IDENTITY, ALIAS, MULTICAST, and GROUPCAST identifiers.</t>
+      <t>“Self-certifying” means that a verifier can recompute the identifier from
+      disclosed immutable certifying material. For IDENTITY, that material is a
+      canonical public key and a consuming protocol can additionally verify key
+      possession. For ALIAS it is canonical text. MULTICAST and GROUPCAST commit
+      to immutable canonical genesis material. A SCIR is not a certificate, does
+      not sign itself, and does not establish mutable authority, membership,
+      control, administration, civil identity, or application compatibility.</t>
+      <t>The relationship-centric PRP architectural model is described
+      informatively in <xref target="I-D.alves-prp-architecture"/>. This document
+      is self-contained for SCIR syntax, formation and validation and does not
+      make conformance depend on an architectural publication revision.</t>
+    </section>
+
+    <section anchor="requirements-language">
+      <name>Requirements Language</name>
+      <t>The key words <bcp14>MUST</bcp14>, <bcp14>MUST NOT</bcp14>,
+      <bcp14>REQUIRED</bcp14>, <bcp14>SHALL</bcp14>, <bcp14>SHALL NOT</bcp14>,
+      <bcp14>SHOULD</bcp14>, <bcp14>SHOULD NOT</bcp14>,
+      <bcp14>RECOMMENDED</bcp14>, <bcp14>NOT RECOMMENDED</bcp14>,
+      <bcp14>MAY</bcp14>, and <bcp14>OPTIONAL</bcp14> in this document are to be
+      interpreted as described in BCP 14 <xref target="RFC2119"/>
+      <xref target="RFC8174"/> when, and only when, they appear in all capitals,
+      as shown here.</t>
+    </section>
+
+    <section anchor="terminology">
+      <name>Terminology</name>
+      <dl newline="true">
+        <dt>Reference suite:</dt>
+        <dd>The hash and identifier length used for class-specific SCIR formation;
+        for IDENTITY it also selects canonical public-key material.</dd>
+        <dt>Canonical public key:</dt>
+        <dd>The exact public verification bytes defined by an identity suite.</dd>
+        <dt>Strong ID:</dt>
+        <dd>The suite-selected digest committing to the suite and canonical
+        public key.</dd>
+        <dt>SCIR:</dt>
+        <dd>The complete reference-class, reference-suite, and identifier tuple
+        and its canonical binary encoding.</dd>
+        <dt>Certifying material:</dt>
+        <dd>The immutable canonical input whose class-specific hash produces the
+        identifier.</dd>
+        <dt>Possession proof:</dt>
+        <dd>Protocol evidence that an endpoint controls the private key material
+        corresponding to an IDENTITY SCIR.</dd>
+        <dt>Carrier:</dt>
+        <dd>An encoding or protocol field that transports a SCIR.</dd>
+      </dl>
+    </section>
+
+    <section anchor="format">
+      <name>Canonical Binary Representation</name>
+      <t>The canonical SCIR consists of:</t>
+      <table anchor="scir-fields">
+        <name>SCIR fields</name>
+        <thead>
+          <tr><th>Offset</th><th>Size</th><th>Field</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>0</td><td>1 octet</td><td>reference_header</td></tr>
+          <tr><td>1</td><td>2 octets</td><td>reference_suite, unsigned big-endian</td></tr>
+          <tr><td>3</td><td>L octets</td><td>identifier</td></tr>
+        </tbody>
+      </table>
+      <t>The low two bits of reference_header contain the reference class. The
+      admitted complete values are 0x00 IDENTITY, 0x01 ALIAS, 0x02 MULTICAST,
+      and 0x03 GROUPCAST. Bits 7 through 2 are reserved and zero. A parser
+      <bcp14>MUST</bcp14> reject every other value and <bcp14>MUST NOT</bcp14>
+      mask reserved bits or coerce one class to another.</t>
+      <t>reference_suite is a complete 16-bit suite value. It is not a
+      format version or a session-protection suite. L is fixed by the recognized
+      suite. There is no identifier-length field and no inner format-version
+      field. An unassigned suite, incorrect total length, truncation, or trailing
+      octet is invalid in a field defined to contain exactly one SCIR.</t>
+    </section>
+
+    <section anchor="suites">
+      <name>Closed Initial Reference-Suite Set</name>
+      <t>This document assigns exactly the following five values. Public-key
+      sizes are in octets. Strong-ID hashes SHA-256 and SHA-384 are defined
+      by <xref target="FIPS180-4"/>. The Ed25519 public-key encoding is defined
+      by <xref target="RFC8032"/>, ML-DSA public-key encodings by
+      <xref target="FIPS204"/>, and BLAKE3 by <xref target="BLAKE3"/>.</t>
+      <table anchor="suite-table">
+        <name>Initial reference suites</name>
+        <thead>
+          <tr><th>Value</th><th>Name</th><th>Strong-ID hash/length</th><th>Public key</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>0x0001</td><td>ED25519-BLAKE3-256</td><td>BLAKE3 / 32</td><td>32</td></tr>
+          <tr><td>0x0002</td><td>ED25519CTX-SHA256-256</td><td>SHA-256 / 32</td><td>32</td></tr>
+          <tr><td>0x0003</td><td>MLDSA65-SHA256-256</td><td>SHA-256 / 32</td><td>1952</td></tr>
+          <tr><td>0x0004</td><td>MLDSA87-SHA384-384</td><td>SHA-384 / 48</td><td>2592</td></tr>
+          <tr><td>0x0005</td><td>ED25519-BLAKE3-MLDSA87-BLAKE3-256</td><td>BLAKE3 / 32</td><td>2624</td></tr>
+        </tbody>
+      </table>
+      <t>For IDENTITY, suites 0x0001 and 0x0002 use the exact 32-octet Ed25519 public-key
+      encoding. Suite 0x0003 uses the exact ML-DSA-65 public-key encoding, and
+      suite 0x0004 uses the exact ML-DSA-87 public-key encoding. Suite 0x0005
+      encodes its canonical public key as Ed25519[32] || ML-DSA-87[2592]. Both
+      components are committed.</t>
+      <t>For the other classes, the public-key column does not apply; the suite's
+      hash and exact identifier length do apply. Every class therefore has a
+      35-octet SCIR under suites 0x0001, 0x0002, 0x0003, and 0x0005, and a
+      51-octet SCIR under suite 0x0004.</t>
+      <t>The numeric values and names preserve existing PRP identity-suite
+      assignments. This document projects them only onto SCIR formation:
+      canonical public-key encoding, commitment hash, and Strong-ID length. It
+      neither defines nor changes a possession-proof operation or proof length.
+      A consuming protocol that uses the same value <bcp14>MUST</bcp14> define
+      its complete operation, inputs, component order, purpose, context,
+      transcript, freshness, role binding, canonical verification, and
+      rejection behavior. Proof semantics <bcp14>MUST NOT</bcp14> be inferred
+      from a suite mnemonic.</t>
+      <t>All other 16-bit values are unassigned in this version and
+      <bcp14>MUST</bcp14> be rejected. There is no private-use range,
+      implementation-defined allocation, or negotiation by observed length.
+      Existing values <bcp14>MUST NOT</bcp14> be reassigned or given new
+      semantics.</t>
+    </section>
+
+    <section anchor="formation">
+      <name>IDENTITY Strong-ID and SCIR Formation</name>
+      <t>Let S be the identity-suite value encoded as an unsigned 16-bit
+      big-endian integer, and let PK be the exact canonical public-key encoding
+      selected by S. The Strong ID is:</t>
+      <sourcecode type="text"><![CDATA[
+strong_id = HASH_S(
+    ASCII("PRP-STRONG-ID-v4") || S:u16be || PK
+)
+]]></sourcecode>
+      <t>HASH_S and its output length are fixed by the suite. No NUL octet,
+      length prefix, textual suite spelling, reference header, or carrier field
+      participates in this preimage. The SCIR is:</t>
+      <sourcecode type="text"><![CDATA[
+scir = 0x00 || S:u16be || strong_id
+]]></sourcecode>
+      <t>Suites remain distinct even when their hash output lengths match,
+      because S participates in both the preimage and the SCIR. Public keys
+      <bcp14>MUST</bcp14> be canonical before hashing. A parser or producer
+      <bcp14>MUST NOT</bcp14> normalize, decompress, reorder, or reinterpret
+      public-key bytes.</t>
+      <t>For BLAKE3 suites, HASH_S is the unkeyed hash mode specified by
+      <xref target="BLAKE3"/>. The Strong ID is the first 32 output octets
+      beginning at XOF output offset zero. keyed_hash, derive_key, a nonzero
+      seek offset, or another output selection <bcp14>MUST NOT</bcp14> be used.</t>
+      <t>For an operational IDENTITY SCIR, every public-key component
+      <bcp14>MUST</bcp14> successfully pass the decoding and public-key validity
+      checks required by its referenced algorithm. The verifier
+      <bcp14>MUST</bcp14> canonically re-encode the decoded key and compare it
+      octet-for-octet with PK before hashing. Suite 0x0005 components are checked
+      independently and retained in their specified order. An invalid or
+      noncanonical encoding <bcp14>MUST</bcp14> be rejected, not normalized.</t>
+    </section>
+
+    <section anchor="validation">
+      <name>IDENTITY Validation and Possession</name>
+      <t>Given an expected SCIR and a presented public key, a verifier
+      <bcp14>MUST</bcp14>:</t>
+      <ol>
+        <li>parse an exact SCIR and require reference_header 0x00;</li>
+        <li>resolve an assigned identity suite and its exact lengths;</li>
+        <li>validate the suite's canonical public-key encoding;</li>
+        <li>recompute the Strong ID as specified in <xref target="formation"/>;</li>
+        <li>compare the complete recomputed SCIR with the expected SCIR; and</li>
+        <li>verify the possession evidence defined by the consuming protocol,
+        using the validated key and that protocol's exact operation and
+        domain.</li>
+      </ol>
+      <t>Strong-ID equality without a valid possession proof is insufficient for
+      authenticated interaction. A valid possession proof does not authenticate
+      a DNS name, application parameter, alias membership, representative
+      authorization, or civil identity unless another applicable protocol binds
+      and validates that statement.</t>
+      <t>When a service is represented, the principal SCIR remains the expected
+      identity. The representative proves its own identity and supplies
+      separately authenticated authorization. A representative key or identity
+      <bcp14>MUST NOT</bcp14> replace the principal Strong ID in the expected
+      SCIR.</t>
+    </section>
+
+    <section anchor="alias-formation">
+      <name>ALIAS Formation</name>
+      <t>An ALIAS is a global, application-independent rendezvous identifier
+      derived from canonical text. Different applications obtain the same ALIAS
+      when they intentionally use the same text and reference suite. No
+      application profile, creator, member, role, authority, or nonce is part of
+      ALIAS certifying material.</t>
+      <t>alias_text <bcp14>MUST</bcp14> be a nonempty Unicode scalar-value
+      sequence, normalized to NFC as specified by <xref target="UAX15"/> and
+      then encoded as UTF-8 as specified by <xref target="RFC3629"/>. The resulting T
+      <bcp14>MUST</bcp14> contain 1 through 1024 octets and <bcp14>MUST
+      NOT</bcp14> contain U+0000 or a C0 or C1 control character. Case,
+      punctuation, and whitespace are otherwise significant.</t>
+      <sourcecode type="text"><![CDATA[
+alias_identifier = HASH_S(
+    ASCII("PRP-SCIR-ALIAS-v1") ||
+    0x01 || S:u16be || len(T):u32be || T
+)
+alias_scir = 0x01 || S:u16be || alias_identifier
+]]></sourcecode>
+      <t>len(T) is the number of UTF-8 octets. HASH_S uses the suite hash and
+      exact output length. A verifier presented with alias text
+      <bcp14>MUST</bcp14> apply the same canonicalization, recompute the complete
+      ALIAS SCIR, and compare every octet. This proves only the committed text;
+      membership, selection, role, and application compatibility require
+      separate authenticated evidence.</t>
+    </section>
+
+    <section anchor="managed-formation">
+      <name>MULTICAST and GROUPCAST Formation Boundary</name>
+      <t>MULTICAST and GROUPCAST are SCIR classes whose identifiers commit to
+      immutable canonical genesis material. Mutable controllers,
+      administrators, participants, incorporated groups, sessions, locators,
+      and application state are not identifier fields. Their exact genesis
+      encoding and authority evidence are specified by the managed-reference
+      profile. Until that profile is admitted, an implementation
+      <bcp14>MUST NOT</bcp14> invent local certifying material and claim an
+      interoperable MULTICAST or GROUPCAST SCIR.</t>
+    </section>
+
+    <section anchor="equality">
+      <name>Equality, Canonicalization, and Replacement</name>
+      <t>Two SCIRs are equal only when their complete octet strings are equal.
+      Equality includes the header, suite, and identifier. Implementations
+      <bcp14>MUST NOT</bcp14> compare only digest bytes or infer a suite from
+      length.</t>
+      <t>A change of suite or certifying material produces a different SCIR.
+      Identity key rotation is reference replacement rather than an in-place
+      update. Continuity, migration, revocation, and authorization
+      across two SCIRs require a separate authenticated statement.</t>
+      <t>The binary SCIR has exactly one encoding. A human interface
+      <bcp14>MAY</bcp14> abbreviate it for diagnostics, but an abbreviation is
+      not a SCIR and <bcp14>MUST NOT</bcp14> be accepted as interoperable input.</t>
+    </section>
+
+    <section anchor="carriers">
+      <name>Carrier Boundary</name>
+      <t>This document defines the exact binary SCIR only. URI, QR Code, DNS,
+      and protocol-message carriers are separate specifications. A carrier
+      <bcp14>MUST NOT</bcp14> redefine SCIR formation or infer its length from
+      available input. An enclosing carrier that permits application parameters
+      after a SCIR <bcp14>MUST</bcp14> determine the SCIR boundary from the
+      assigned suite and treat the remaining octets as carrier data, not as a
+      SCIR extension.</t>
+      <t>Carrier proximity does not authenticate application parameters. A
+      carrier specification must define its own canonical encoding, size bounds,
+      parsing, and security properties.</t>
+    </section>
+
+    <section anchor="extensibility">
+      <name>Extensibility</name>
+      <t>A future normative revision can assign another reference suite only by
+      defining its numeric value, commitment hash, identifier length, applicable
+      canonical material, security properties, and deterministic vectors. A
+      consuming protocol independently specifies any possession profile it
+      associates with IDENTITY. Unknown and unassigned suites fail closed.</t>
+      <t>All four headers are SCIR classes but do not inherit IDENTITY formation
+      or possession semantics merely because they share an envelope. A future incompatible
+      SCIR grammar requires an explicitly recognizable successor; decoders
+      <bcp14>MUST NOT</bcp14> guess from length or reserved bits.</t>
+    </section>
+
+    <section anchor="security">
+      <name>Security Considerations</name>
+      <ul>
+        <li>The security strength of a SCIR is bounded by its suite, hash, and
+        class-specific certifying material.</li>
+        <li>A syntactically valid or correctly formed SCIR does not authenticate
+        its supplier.</li>
+        <li>Possession of identity keys, alias-text equality, or genesis validity
+        does not itself grant application, membership, control, administration,
+        or relationship authority.</li>
+        <li>Downgrade and cross-suite fallback are prohibited. Equal field
+        lengths do not establish compatibility.</li>
+        <li>A verifier must bind possession evidence to the consuming protocol's
+        exact purpose, transcript, roles, and freshness rules.</li>
+        <li>Private keys, session secrets, and private application data are never
+        SCIR fields.</li>
+        <li>Parsers must validate suite and exact size before allocation and must
+        fail closed on unassigned values, reserved bits, truncation, and trailing
+        data in an exact-SCIR field.</li>
+      </ul>
+    </section>
+
+    <section anchor="privacy">
+      <name>Privacy Considerations</name>
+      <t>A stable SCIR permits correlation across publications, applications,
+      carriers, and time. Applications should disclose a SCIR only where a stable
+      reference is required and should not treat the absence of a civil name or
+      network address as anonymity. Public DNS or QR disclosure makes the stable
+      pseudonym observable. Replacement does not ensure unlinkability when the
+      same public key, a migration statement, or the same application account
+      exposes continuity. Suite choice can fingerprint implementation capability
+      or policy. A SCIR has no embedded revocation or freshness, so a carrier or
+      cache can retain an obsolete reference. User interfaces should distinguish
+      verified identity information from untrusted labels and abbreviations.</t>
+      <t>Human-readable or low-entropy ALIAS text is enumerable by dictionary
+      attack. Parties requiring an unguessable rendezvous value should share
+      high-entropy alias text; adding an application identifier to the ALIAS
+      would fragment the intended global rendezvous namespace and is not a
+      privacy mechanism.</t>
+    </section>
+
+    <section anchor="iana">
+      <name>IANA Considerations</name>
+      <t>This document has no IANA actions. The reference-suite namespace is
+      closed to the five assignments in <xref target="suites"/>. This document
+      neither creates an IANA registry nor delegates suite allocation to another
+      registry. A future standards action can revise the closed set or create a
+      registry without changing an existing assignment.</t>
+    </section>
+  </middle>
+  <back>
+    <references>
+      <name>Normative References</name>
+      <reference anchor="RFC2119" target="https://www.rfc-editor.org/info/rfc2119">
+        <front><title>Key words for use in RFCs to Indicate Requirement Levels</title>
+          <author initials="S." surname="Bradner" fullname="Scott Bradner"/>
+          <date month="March" year="1997"/></front>
+        <seriesInfo name="BCP" value="14"/><seriesInfo name="RFC" value="2119"/>
+        <seriesInfo name="DOI" value="10.17487/RFC2119"/>
+      </reference>
+      <reference anchor="RFC8174" target="https://www.rfc-editor.org/info/rfc8174">
+        <front><title>Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words</title>
+          <author initials="B." surname="Leiba" fullname="Barry Leiba"/>
+          <date month="May" year="2017"/></front>
+        <seriesInfo name="BCP" value="14"/><seriesInfo name="RFC" value="8174"/>
+        <seriesInfo name="DOI" value="10.17487/RFC8174"/>
+      </reference>
+      <reference anchor="RFC8032" target="https://www.rfc-editor.org/info/rfc8032">
+        <front><title>Edwards-Curve Digital Signature Algorithm (EdDSA)</title>
+          <author initials="S." surname="Josefsson" fullname="Simon Josefsson"/>
+          <author initials="I." surname="Liusvaara" fullname="Ilari Liusvaara"/>
+          <date month="January" year="2017"/></front>
+        <seriesInfo name="RFC" value="8032"/><seriesInfo name="DOI" value="10.17487/RFC8032"/>
+      </reference>
+      <reference anchor="RFC3629" target="https://www.rfc-editor.org/info/rfc3629">
+        <front><title>UTF-8, a transformation format of ISO 10646</title>
+          <author initials="F." surname="Yergeau" fullname="François Yergeau"/>
+          <date month="November" year="2003"/></front>
+        <seriesInfo name="STD" value="63"/><seriesInfo name="RFC" value="3629"/>
+        <seriesInfo name="DOI" value="10.17487/RFC3629"/>
+      </reference>
+      <reference anchor="UAX15" target="https://www.unicode.org/reports/tr15/tr15-58.html">
+        <front><title>Unicode Normalization Forms</title>
+          <author initials="K." surname="Whistler" fullname="Ken Whistler"/>
+          <date month="August" year="2026"/></front>
+        <seriesInfo name="Unicode Standard Annex" value="15, Revision 58"/>
+      </reference>
+      <reference anchor="FIPS180-4" target="https://doi.org/10.6028/NIST.FIPS.180-4">
+        <front><title>Secure Hash Standard (SHS)</title>
+          <author><organization>National Institute of Standards and Technology</organization></author>
+          <date month="August" year="2015"/></front>
+        <seriesInfo name="FIPS" value="180-4"/><seriesInfo name="DOI" value="10.6028/NIST.FIPS.180-4"/>
+      </reference>
+      <reference anchor="FIPS204" target="https://doi.org/10.6028/NIST.FIPS.204">
+        <front><title>Module-Lattice-Based Digital Signature Standard</title>
+          <author><organization>National Institute of Standards and Technology</organization></author>
+          <date month="August" year="2024"/></front>
+        <seriesInfo name="FIPS" value="204"/><seriesInfo name="DOI" value="10.6028/NIST.FIPS.204"/>
+      </reference>
+      <reference anchor="BLAKE3" target="https://c2sp.org/BLAKE3@v1.0.0">
+        <front><title>BLAKE3, Version 1.0.0</title>
+          <author initials="J-P." surname="Aumasson" fullname="Jean-Philippe Aumasson"/>
+          <author initials="S." surname="Neves" fullname="Samuel Neves"/>
+          <author initials="J." surname="O'Connor" fullname="Jack O'Connor"/>
+          <author initials="Z." surname="Wilcox-O'Hearn" fullname="Zooko Wilcox-O'Hearn"/>
+          <date year="2026"/></front>
+        <seriesInfo name="C2SP" value="BLAKE3 v1.0.0"/>
+      </reference>
+    </references>
+    <references>
+      <name>Informative References</name>
+      <reference anchor="I-D.alves-prp-architecture" target="https://datatracker.ietf.org/doc/draft-alves-prp-architecture/">
+        <front><title>The Participant Relationship Protocol (PRP): A Relationship-Centric Network Architecture</title>
+          <author initials="G. J." surname="Alves" fullname="Gustavo Junior Alves"/>
+          <date month="August" year="2026"/></front>
+        <seriesInfo name="Internet-Draft" value="draft-alves-prp-architecture-00"/>
+      </reference>
+    </references>
+
+    <section anchor="vectors">
+      <name>Deterministic IDENTITY Formation Vectors</name>
+      <t>This appendix is normative for IDENTITY Strong-ID and SCIR formation. For each
+      row, PK consists entirely of zero octets and has the suite's exact public-
+      key length. These inputs test byte formation and hashing only. An all-zero
+      public-key string is not thereby a valid public key or possession
+      credential.</t>
+      <t>In the following display, the two indented hexadecimal lines for suite
+      0x0004 are concatenated without whitespace.</t>
+      <sourcecode anchor="formation-vectors" type="text"><![CDATA[
+0x0001:
+  e4bd9eb22a08f3d827a967309aab01feba118c44d1a7885570159a79ec22b9f3
+0x0002:
+  a7f8df105f14f17c2c548004e5452da234905a442c83480b42b63a3913764e94
+0x0003:
+  0b5ddea92ee507c96002c90aafd3a7d620ce2d114ff9b0d716968eaa956c5550
+0x0004:
+  0bcfc9cc0dff7f6e1f6d1a7d25430768ab8b8514be8e3296831485a1d5e1dccc
+  98ee527795a309518c3254bbbff0e9a1
+0x0005:
+  544fd942e57dfea2f8d732e85b87561bbed047673ba9a5e099cf5e70024b1e4c
+]]></sourcecode>
+      <t>The corresponding SCIR is the octet 00, followed by the four-digit
+      hexadecimal suite value in network order, followed by the listed Strong
+      ID. For example, the suite 0x0001 SCIR is:</t>
+      <sourcecode type="text"><![CDATA[
+000001
+e4bd9eb22a08f3d827a967309aab01feba118c44d1a7885570159a79ec22b9f3
+]]></sourcecode>
+    </section>
+
+    <section anchor="alias-vectors">
+      <name>Deterministic ALIAS Formation Vector</name>
+      <t>For alias_text "rideshare:airport:gru", canonical T is the 21-octet
+      UTF-8 string shown below. Under suite 0x0001, the complete ALIAS SCIR is:</t>
+      <sourcecode type="text"><![CDATA[
+T = 7269646573686172653a616972706f72743a677275
+SCIR = 010001
+       f707b9ee960688f1bd6c7fa86c42af5903b02b59a235c3e790d5afd816e38c
+       5f
+]]></sourcecode>
+      <t>The composed text "Café" and the canonically equivalent decomposed
+      input "Cafe" followed by U+0301 both normalize to UTF-8
+      436166c3a9. Under suite 0x0001 they produce:</t>
+      <sourcecode type="text"><![CDATA[
+010001ed82909bdbb8feb6ab7073ce4cb811f16297e6711897ea8f773b598c32
+8a2656
+]]></sourcecode>
+    </section>
+
+    <section anchor="rejection-vectors">
+      <name>Required Rejection Cases</name>
+      <t>An exact-SCIR parser <bcp14>MUST</bcp14> reject each of the following:</t>
+      <ul>
+        <li>any header other than 0x00 through 0x03, including a nonzero reserved bit;</li>
+        <li>suite 0x0000 or any value other than 0x0001 through 0x0005;</li>
+        <li>one-octet-short, one-octet-long, truncated, or trailing input;</li>
+        <li>a 32-octet Strong ID under suite 0x0004;</li>
+        <li>a 48-octet Strong ID under any suite other than 0x0004; and</li>
+        <li>a valid identifier presented with a different suite or class;</li>
+        <li>an empty or greater-than-1024-octet canonical ALIAS text; and</li>
+        <li>ALIAS text containing U+0000 or a C0 or C1 control character.</li>
+      </ul>
+    </section>
+
+    <section anchor="acknowledgments">
+      <name>Acknowledgments</name>
+      <t>The author thanks the implementers and reviewers whose work clarified
+      the distinction among identity references, service identities, carriers,
+      and machine addresses. Specific reviewers will be acknowledged in later
+      revisions.</t>
+    </section>
+  </back>
+</rfc>

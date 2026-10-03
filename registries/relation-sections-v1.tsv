@@ -1,0 +1,9 @@
+section_type	name	version	allowed_operations	state_model	specification	status
+0x0001	KEY_LIFECYCLE	0x01	PROPOSE|CONDITION	persistent	prp-relationship-lifecycle-v1	working-draft
+0x0002	REKEY_SCHEDULE	0x01	PROPOSE|CONDITION	persistent-attempt	prp-relationship-lifecycle-v1	working-draft
+0x0003	RESOURCE_REPORT_POLICY	0x01	PROPOSE	persistent-directional	prp-resource-report-v1	working-draft
+0x0004	DRAIN_POLICY	0x01	DECLARE	persistent	prp-relationship-lifecycle-v1	working-draft
+0x0005	CARRIER_ATTACHMENT_BINDING	0x01	DECLARE	relationship-epoch-evidence	prp-discovery-architecture-v1	working-draft
+0x0006	DISCOVERY_POLICY	0x01	PROPOSE	persistent-directional	prp-discovery-policy-v1	working-draft
+0x0100	MEMBER_ROUTE_INTENT	0x01	PROPOSE	transaction-scoped	prp-member-route-intent-v1	working-draft-activation-open
+0x0101	DISCOVERY_LANE_BIND	0x01	PROPOSE	transaction-scoped	prp-protected-discovery-lane-v1	working-draft

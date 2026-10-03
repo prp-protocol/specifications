@@ -1,0 +1,3 @@
+application	application_hex	profile	application_version	status	payload_authority
+POST	504f5354	1	1	experimental	prp-protocol-social/docs/POST.md
+PRPD	50525044	1	1	experimental-private	prp-demo/src/app-envelope.js

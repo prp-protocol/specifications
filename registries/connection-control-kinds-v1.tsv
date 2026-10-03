@@ -1,0 +1,11 @@
+kind	name	version	length	specification
+0x01	OPEN	legacy	17	prp-wire-v4
+0x02	ACCEPT	legacy	23	prp-wire-v4
+0x03	REFUSE	legacy	11	prp-wire-v4
+0x04	CLOSE	legacy	10	prp-wire-v4
+0x05	CLOSE_ACK	legacy	8	prp-wire-v4
+0x06	FEEDBACK	legacy	23	prp-wire-v4
+0x07	OPEN_APP	1	62..125	prp-application-agreement-v1
+0x08	ACCEPT_APP	1	113	prp-application-agreement-v1
+0x09	CONFIRM_APP	1	75	prp-application-agreement-v1
+0x0a	REFUSE_APP	1	77	prp-application-agreement-v1
