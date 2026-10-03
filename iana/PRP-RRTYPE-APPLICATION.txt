@@ -74,7 +74,7 @@ J. Additional information:
 After review only:
 To: dns-rrtype-applications@ietf.org
 Subject: RRTYPE allocation request: PRP reference association
-Review package entry point: iana/REVISAO-PRP-DNS.md. It identifies the exact
+Review package entry point: iana/PRP-DNS-REVIEW.md. It identifies the exact
 reference-suite/class baselines and attachment/reference boundaries. At approved
 submission, fill the actual date and attach the approved description and
 permitted references in accordance with Appendix A. No email or registry

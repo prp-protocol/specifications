@@ -8,14 +8,20 @@
     },
     {
       "path": "DOCUMENT-RIGHTS.md",
-      "sha256": "35223e62a233149aca2c03aea121fcb31157525636317ff3085c8dce3f3d34bd",
-      "size": 3742,
+      "sha256": "e2070f677ca3988a7696a61496892063bf19a722ebba0bcf90945851b1d693ff",
+      "size": 3741,
       "source": "DOCUMENT-RIGHTS.md"
     },
     {
+      "path": "iana/PRP-DNS-REVIEW.md",
+      "sha256": "b11f7e30e0cd41aab24340e764e5226e5ea08e003a15a5a326b27581d6a81f8e",
+      "size": 4789,
+      "source": "iana/PRP-DNS-REVIEW.md"
+    },
+    {
       "path": "iana/PRP-RRTYPE-APPLICATION.txt",
-      "sha256": "bb3b44d76d77ec938f7419c1944293892569c239c922b380564012b76dce8ecf",
-      "size": 5127,
+      "sha256": "de8bdee5510a1ae02d134ba54f14347f35835a8e9d4602cb3cef1e39c8fd7d4c",
+      "size": 5126,
       "source": "iana/PRP-RRTYPE-APPLICATION.txt"
     },
     {
@@ -23,12 +29,6 @@
       "sha256": "eceea1215d35ed78ef46433f441acf9b2f9cde6deb3a0acfa533f22004b85699",
       "size": 6520,
       "source": "iana/PRP-URI-SCHEME-APPLICATION.md"
-    },
-    {
-      "path": "iana/REVISAO-PRP-DNS.md",
-      "sha256": "c0cafdd760b8b803de793d9f121923c21fe6cffa336510cfa11a9ea152d601e9",
-      "size": 5443,
-      "source": "iana/REVISAO-PRP-DNS.md"
     },
     {
       "path": "internet-drafts/draft-alves-prp-architecture-00.xml",
@@ -236,8 +236,8 @@
     },
     {
       "path": "specifications/prp-reference-representation-v2.md",
-      "sha256": "65097e273dce1cd55d79e316f784f33cd3f9d05a05fc5e32de6834ce51a98589",
-      "size": 29651,
+      "sha256": "32e7a866f4b3fc0d8b3dcfb396b929e25a788602cbb23a415490c3958ceeaa4d",
+      "size": 29635,
       "source": "specifications/prp-reference-representation-v2.md"
     },
     {
@@ -321,6 +321,6 @@
   ],
   "format": "prp-public-specifications-mirror-v1",
   "source_repository": "prp-spec",
-  "source_revision": "aba4f258098ae186c7fb66b453f5490ff60285bd",
+  "source_revision": "a69eb5e4c07d313cf16d757b2845539abd18d634",
   "target_repository": "https://github.com/prp-protocol/specifications"
 }

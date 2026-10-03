@@ -400,7 +400,7 @@ clock is implemented by it.
 
 ### 4.2 Temporal verification boundary for this phase
 
-The optional temporal attestor ("cartório") is outside this phase.
+The optional temporal notary is outside this phase.
 No attestation service, trust/bootstrap protocol,
 query/response, locator or related wire assignment is required to consolidate
 REF-001. This removal is not a claim that such a service was implemented or

@@ -18,7 +18,7 @@ the original author.
 
 By the author's explicit authorization on 2026-09-08, CC BY 4.0 also applies
 to the author-owned text of `specifications/prp-dns-reference-rr-v1.md`,
-`iana/PRP-RRTYPE-APPLICATION.txt` and `iana/REVISAO-PRP-DNS.md`.
+`iana/PRP-RRTYPE-APPLICATION.txt` and `iana/PRP-DNS-REVIEW.md`.
 For this material, the attribution is "Gustavo Junior Alves, DNS publication
 of PRP references" and SHOULD include a link to this repository or the
 published specification when available. The same permissions for copying,
