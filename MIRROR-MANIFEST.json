@@ -68,8 +68,8 @@
     },
     {
       "path": "MIRROR-POLICY.md",
-      "sha256": "e54db8577267cd101e855f8435ab714b16ca5967f6e8f892b6042bb0b21342b9",
-      "size": 1701,
+      "sha256": "606fa0ffde6f70fee46b021167cd01a9cbb1e26f0fe79766938fcbc4f6e0a798",
+      "size": 2069,
       "source": "publication/github/MIRROR-POLICY.md"
     },
     {
@@ -321,6 +321,6 @@
   ],
   "format": "prp-public-specifications-mirror-v1",
   "source_repository": "prp-spec",
-  "source_revision": "a69eb5e4c07d313cf16d757b2845539abd18d634",
+  "source_revision": "d1549c30a2f160ba9eb34d252e24d2be88f942bb",
   "target_repository": "https://github.com/prp-protocol/specifications"
 }

@@ -40,3 +40,11 @@ material.
 The mirror contains no automatic authority to submit a document to the IETF,
 request an IANA assignment, create a release or claim implementation
 conformance.
+
+## Language
+
+Mirrored filenames and expository prose MUST be in English. Proper names,
+protocol literals and examples whose purpose is to test Unicode processing may
+retain their exact non-English or non-ASCII bytes. Internal source material is
+held to the same English-language policy even when excluded from the mirror;
+older text remains available in Git history.
